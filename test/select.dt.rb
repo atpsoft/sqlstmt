@@ -2,10 +2,10 @@ require 'sqlstmt/select'
 
 module SqlStmt
 
-class Test_Select < DohTest::TestGroup
-  def notest_minimum_requirements
-    assert_raises(SqlStmt::Error) { Select.new('target').to_s }
-    assert_raises(SqlStmt::Error) { Select.new('target').no_where.to_s }
+class TestSelect < DohTest::TestGroup
+  def test_minimum_requirements
+    assert_raises(SqlStmt::Error) { Select.new.table('target').to_s }
+    assert_raises(SqlStmt::Error) { Select.new.table('target').no_where.to_s }
   end
 
   def test_stuff

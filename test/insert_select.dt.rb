@@ -2,7 +2,7 @@ require 'sqlstmt/insert_select'
 
 module SqlStmt
 
-class TC_insert_select < DohTest::TestGroup
+class TestInsertSelect < DohTest::TestGroup
   def test_minimum_requirements
     assert_raises(SqlStmt::Error) { InsertSelect.new.into('target').to_s }
     assert_raises(SqlStmt::Error) { InsertSelect.new.into('target').no_where.to_s }
