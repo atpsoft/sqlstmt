@@ -5,6 +5,7 @@ module SqlStmt
 
 class Query
   force_deep_copy :fields, :tables, :wheres
+  attr_reader :fields, :tables, :wheres
 
   def initialize
     @fields = []
