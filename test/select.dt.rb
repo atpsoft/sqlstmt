@@ -10,6 +10,7 @@ class TestSelect < DohTest::TestGroup
 
   def test_stuff
     assert_equal('SELECT blah FROM source', Select.new.table('source').field('blah').no_where.to_s)
+    assert_equal('SELECT DISTINCT blah FROM source', Select.new.table('source').field('blah').no_where.distinct.to_s)
     assert_equal('SELECT blah FROM source WHERE source_id = 1', Select.new.table('source').field('blah').where('source_id = 1').to_s)
     assert_equal('SELECT blah FROM source s', Select.new.table('source s').field('blah').no_where.to_s)
     assert_equal('SELECT blah FROM source s JOIN other o ON s.blah_id = o.blah_id', Select.new.table('source s').join('other o', 's.blah_id = o.blah_id').field('blah').no_where.to_s)

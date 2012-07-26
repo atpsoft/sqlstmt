@@ -8,6 +8,11 @@ class Select < FromQuery
     self
   end
 
+  def distinct
+    @distinct = true
+    self
+  end
+
 private
   def verify_minimum_requirements
     super
@@ -15,8 +20,9 @@ private
   end
 
   def build_stmt
+    distinct_str = if @distinct then 'DISTINCT ' else '' end
     select_str = @fields.join(',')
-    "SELECT #{select_str}#{build_from_clause}"
+    "SELECT #{distinct_str}#{select_str}#{build_from_clause}"
   end
 end
 
