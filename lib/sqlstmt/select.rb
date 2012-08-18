@@ -13,6 +13,10 @@ class Select < FromQuery
     self
   end
 
+  def into(str)
+    @into = str
+  end
+
 private
   def verify_minimum_requirements
     super
@@ -21,8 +25,9 @@ private
 
   def build_stmt
     distinct_str = if @distinct then 'DISTINCT ' else '' end
+    into_str = if @into then " INTO #{@into}" else '' end
     select_str = @fields.join(',')
-    "SELECT #{distinct_str}#{select_str}#{build_from_clause}"
+    "SELECT #{distinct_str}#{select_str}#{build_from_clause}#{into_str}"
   end
 end
 
