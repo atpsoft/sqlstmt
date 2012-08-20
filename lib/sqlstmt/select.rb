@@ -15,6 +15,7 @@ class Select < FromQuery
 
   def into(str)
     @into = str
+    self
   end
 
 private
