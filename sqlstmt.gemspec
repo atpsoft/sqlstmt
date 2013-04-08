@@ -2,7 +2,7 @@ require 'rake'
 
 Gem::Specification.new do |s|
   s.name = 'sqlstmt'
-  s.version = '0.1.5'
+  s.version = '0.1.6'
   s.summary = 'helper for building SQL statements'
   s.description = 'mysql centric (for now) object helpers for building SQL statements'
   s.require_path = 'lib'

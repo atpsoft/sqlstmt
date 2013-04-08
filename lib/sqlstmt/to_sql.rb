@@ -63,3 +63,9 @@ class Array
     '(' + collect { |elem| elem.to_sql }.join(',') + ')'
   end
 end
+
+class Set
+  def to_sql
+    to_a.to_sql
+  end
+end
