@@ -4,18 +4,39 @@ require 'sqlstmt/error'
 module SqlStmt
 
 class Query
-  force_deep_copy :fields, :tables, :wheres
-  attr_reader :fields, :tables, :wheres
+  force_deep_copy :fields, :tables, :joins, :wheres
+  attr_reader :fields, :tables, :joins, :wheres
 
   def initialize
     @fields = []
     @tables = []
+    @joins = []
     @wheres = []
     @use_wheres = true
   end
 
   def table(table)
     @tables.push(table)
+    self
+  end
+
+  def join(table, expr)
+    @joins.push("JOIN #{table} ON #{expr}")
+    self
+  end
+
+  def join_using(table, *fields)
+    @joins.push("JOIN #{table} USING (#{fields.join(',')})")
+    self
+  end
+
+  def left_join(table, expr)
+    @joins.push("LEFT JOIN #{table} ON #{expr}")
+    self
+  end
+
+  def left_join_using(table, *fields)
+    @joins.push("LEFT JOIN #{table} USING (#{fields.join(',')})")
     self
   end
 
@@ -42,6 +63,14 @@ private
 
   def build_table_list
     @tables.join(',')
+  end
+
+  def build_join_clause
+    if @joins.empty?
+      ''
+    else
+      " #{@joins.join(' ')}"
+    end
   end
 
   def build_where_clause

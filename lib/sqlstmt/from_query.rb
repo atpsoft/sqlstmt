@@ -3,34 +3,11 @@ require 'sqlstmt/query'
 module SqlStmt
 
 class FromQuery < Query
-  force_deep_copy :joins
-
   def initialize
     super
-    @joins = []
     @group_by = nil
     @order_by = nil
     @limit = nil
-  end
-
-  def join(table, expr)
-    @joins.push("JOIN #{table} ON #{expr}")
-    self
-  end
-
-  def join_using(table, *fields)
-    @joins.push("JOIN #{table} USING (#{fields.join(',')})")
-    self
-  end
-
-  def left_join(table, expr)
-    @joins.push("LEFT JOIN #{table} ON #{expr}")
-    self
-  end
-
-  def left_join_using(table, *fields)
-    @joins.push("LEFT JOIN #{table} USING (#{fields.join(',')})")
-    self
   end
 
   def group_by(clause)
@@ -60,7 +37,7 @@ private
   end
 
   def build_from_clause
-    join_clause = if @joins.empty? then '' else " #{@joins.join(' ')}" end
+    join_clause = build_join_clause
     group_clause = simple_clause('GROUP BY', @group_by)
     order_clause = simple_clause('ORDER BY', @order_by)
     limit_clause = simple_clause('LIMIT', @limit)

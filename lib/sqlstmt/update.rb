@@ -28,7 +28,7 @@ private
   end
 
   def build_stmt
-    "UPDATE #{build_table_list} SET #{build_set_clause}#{build_where_clause}"
+    "UPDATE #{build_table_list}#{build_join_clause} SET #{build_set_clause}#{build_where_clause}"
   end
 end
 
