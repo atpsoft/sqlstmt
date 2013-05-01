@@ -6,6 +6,8 @@ class TestSelect < DohTest::TestGroup
   def test_minimum_requirements
     assert_raises(SqlStmt::Error) { Select.new.table('target').to_s }
     assert_raises(SqlStmt::Error) { Select.new.table('target').no_where.to_s }
+    assert_raises(SqlStmt::Error) { Select.new.table('target').optional_where.to_s }
+    assert_equal('SELECT blah FROM target', Select.new.table('target').optional_where.field('blah').to_s)
   end
 
   def test_stuff

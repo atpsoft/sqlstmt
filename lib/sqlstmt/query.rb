@@ -12,7 +12,7 @@ class Query
     @tables = []
     @joins = []
     @wheres = []
-    @use_wheres = true
+    @where_behavior = :require
   end
 
   def table(table)
@@ -46,7 +46,12 @@ class Query
   end
 
   def no_where
-    @use_wheres = false
+    @where_behavior = :exclude
+    self
+  end
+
+  def optional_where
+    @where_behavior = :optional
     self
   end
 
@@ -57,8 +62,11 @@ class Query
 
 private
   def verify_minimum_requirements
-    raise SqlStmt::Error, "unable to build sql - must call :where or :no_where" if @use_wheres && @wheres.empty?
-    raise SqlStmt::Error, "unable to build sql - :where and :no_where must not both be called" if !@use_wheres && !@wheres.empty?
+    if (@where_behavior == :require) && @wheres.empty?
+      raise SqlStmt::Error, "unable to build sql - must call :where, :no_where, or :optional_where"
+    elsif (@where_behavior == :exclude) && !@wheres.empty?
+      raise SqlStmt::Error, "unable to build sql - :where and :no_where must not both be called, consider :optional_where instead"
+    end
   end
 
   def build_table_list
