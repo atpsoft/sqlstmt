@@ -1,0 +1,25 @@
+PATH
+  remote: .
+  specs:
+    sqlstmt (0.1.9)
+      dohutil (>= 0.2.11)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    dohroot (0.1.1)
+    dohtest (0.1.15)
+      dohroot (>= 0.1.0)
+      term-ansicolor (>= 1.0.7)
+    dohutil (0.2.11)
+      dohroot (>= 0.1.1)
+      highline (>= 1.6.13)
+    highline (1.6.18)
+    term-ansicolor (1.1.5)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  dohtest (>= 0.1.15)
+  sqlstmt!
