@@ -13,6 +13,11 @@ class InsertSelect < FromQuery
     @into_table = nil
   end
 
+  def distinct
+    @distinct = true
+    self
+  end
+
   def into(table)
     @into_table = table
     self
@@ -26,9 +31,10 @@ private
   end
 
   def build_stmt
+    distinct_str = if @distinct then 'DISTINCT ' else '' end
     into_str = @fields.join(',')
     select_str = @values.join(',')
-    "INSERT INTO #@into_table (#{into_str}) SELECT #{select_str}#{build_from_clause}"
+    "INSERT INTO #@into_table (#{into_str}) SELECT #{distinct_str}#{select_str}#{build_from_clause}"
   end
 end
 
