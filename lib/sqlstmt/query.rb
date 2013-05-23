@@ -16,27 +16,33 @@ class Query
   end
 
   def table(table)
-    @tables.push(table)
+    @tables << table
     self
   end
 
   def join(table, expr)
-    @joins.push("JOIN #{table} ON #{expr}")
+    @joins << ['JOIN', table, "ON #{expr}"]
     self
   end
 
+  def optional_join(table, expr)
+    unless find_join(table)
+      join(table, expr)
+    end
+  end
+
   def join_using(table, *fields)
-    @joins.push("JOIN #{table} USING (#{fields.join(',')})")
+    @joins << ['JOIN', table, "USING (#{fields.join(',')})"]
     self
   end
 
   def left_join(table, expr)
-    @joins.push("LEFT JOIN #{table} ON #{expr}")
+    @joins << ['LEFT JOIN', table, "ON #{expr}"]
     self
   end
 
   def left_join_using(table, *fields)
-    @joins.push("LEFT JOIN #{table} USING (#{fields.join(',')})")
+    @joins << ['LEFT JOIN', table, "USING (#{fields.join(',')})"]
     self
   end
 
@@ -61,6 +67,12 @@ class Query
   end
 
 private
+  def find_join(table_to_find)
+    @joins.find do |_, table, _|
+      table_to_find == table
+    end
+  end
+
   def verify_minimum_requirements
     if (@where_behavior == :require) && @wheres.empty?
       raise SqlStmt::Error, "unable to build sql - must call :where, :no_where, or :optional_where"
@@ -77,7 +89,7 @@ private
     if @joins.empty?
       ''
     else
-      " #{@joins.uniq.join(' ')}"
+      ' ' + @joins.collect{|ary| ary.join(' ')}.uniq.join(' ')
     end
   end
 
