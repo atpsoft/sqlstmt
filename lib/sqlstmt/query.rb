@@ -77,7 +77,7 @@ private
     if @joins.empty?
       ''
     else
-      " #{@joins.join(' ')}"
+      " #{@joins.uniq.join(' ')}"
     end
   end
 

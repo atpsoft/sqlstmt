@@ -21,6 +21,12 @@ class TestSelect < DohTest::TestGroup
     assert_equal('SELECT blah FROM source s LEFT JOIN other o USING (blah_id)', Select.new.table('source s').left_join_using('other o', 'blah_id').field('blah').no_where.to_s)
     assert_equal('SELECT blah,blee FROM source', Select.new.table('source').field('blah','blee').no_where.to_s)
   end
+
+  def test_duplicate_joins
+    sqlb = Select.new.table('source s').field('frog').no_where
+    4.times { sqlb.join('other o', 's.blah_id = o.blah_id') }
+    assert_equal('SELECT frog FROM source s JOIN other o ON s.blah_id = o.blah_id', sqlb.to_s)
+  end
 end
 
 end
