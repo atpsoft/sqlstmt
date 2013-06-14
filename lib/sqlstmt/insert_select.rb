@@ -18,6 +18,11 @@ class InsertSelect < FromQuery
     self
   end
 
+  def ignore
+    @ignore = true
+    self
+  end
+
   def into(table)
     @into_table = table
     self
@@ -32,9 +37,10 @@ private
 
   def build_stmt
     distinct_str = if @distinct then 'DISTINCT ' else '' end
+    ignore_str = if @ignore then 'IGNORE ' else '' end
     into_str = @fields.join(',')
     select_str = @values.join(',')
-    "INSERT INTO #@into_table (#{into_str}) SELECT #{distinct_str}#{select_str}#{build_from_clause}"
+    "INSERT #{ignore_str}INTO #@into_table (#{into_str}) SELECT #{distinct_str}#{select_str}#{build_from_clause}"
   end
 end
 
