@@ -8,6 +8,7 @@ class FromQuery < Query
     @group_by = nil
     @order_by = nil
     @limit = nil
+    @having = []
   end
 
   def group_by(clause)
@@ -25,6 +26,11 @@ class FromQuery < Query
     self
   end
 
+  def having(*sql)
+    @having.concat(sql)
+    self
+  end
+
 private
   def verify_minimum_requirements
     super
@@ -36,12 +42,20 @@ private
     if value then " #{keywords} #{value}" else '' end
   end
 
+  def having_clause
+    if @having.empty?
+      ''
+    else
+      " HAVING #{@having.join(' AND ')}"
+    end
+  end
+
   def build_from_clause
     join_clause = build_join_clause
     group_clause = simple_clause('GROUP BY', @group_by)
     order_clause = simple_clause('ORDER BY', @order_by)
     limit_clause = simple_clause('LIMIT', @limit)
-    " FROM #{build_table_list}#{join_clause}#{build_where_clause}#{group_clause}#{order_clause}#{limit_clause}"
+    " FROM #{build_table_list}#{join_clause}#{build_where_clause}#{group_clause}#{order_clause}#{limit_clause}#{having_clause}"
   end
 end
 
