@@ -10,6 +10,7 @@ class InsertSelect < FromQuery
   def initialize
     super
     @values = []
+    @distinct = @ignore = false
     @into_table = nil
   end
 

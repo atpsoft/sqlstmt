@@ -3,6 +3,12 @@ require 'sqlstmt/from_query'
 module SqlStmt
 
 class Select < FromQuery
+  def initialize
+    super
+    @distinct = false
+    @into = nil
+  end
+
   def field(*field_exprs)
     @fields.concat(field_exprs)
     self
