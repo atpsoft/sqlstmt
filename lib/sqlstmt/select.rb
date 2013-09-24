@@ -19,8 +19,8 @@ class Select < FromQuery
     self
   end
 
-  def into(str)
-    @into = str
+  def into_outfile(str)
+    @into = "OUTFILE #{str}"
     self
   end
 

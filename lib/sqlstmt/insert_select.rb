@@ -24,10 +24,13 @@ class InsertSelect < FromQuery
     self
   end
 
-  def into(table)
+  def insert_into(table)
     @into_table = table
     self
   end
+
+  # as a transition mechanism
+  alias :into :insert_into
 
 private
   def verify_minimum_requirements
