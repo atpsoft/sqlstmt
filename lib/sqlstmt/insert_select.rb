@@ -29,9 +29,6 @@ class InsertSelect < FromQuery
     self
   end
 
-  # as a transition mechanism
-  alias :into :insert_into
-
 private
   def verify_minimum_requirements
     super
