@@ -67,13 +67,20 @@ class Query
   end
 
   def includes_table?(table_to_find)
-    return true if @tables.include?(table_to_find)
-    @joins.find do |_, table, _|
-      table_to_find == table
-    end
+    retval = @tables.find { |table| table_names_match?(table, table_to_find) }
+    retval ||= @joins.find { |_, table, _| table_names_match?(table, table_to_find) }
+    retval
   end
 
 private
+  def table_names_match?(fullstr, tofind)
+    if tofind.index(' ') || !fullstr.index(' ')
+      return fullstr == tofind
+    end
+    orig_name, _, tblas = fullstr.partition(' ')
+    (orig_name == tofind) || (tblas == tofind)
+  end
+
   def verify_minimum_requirements
     if (@where_behavior == :require) && @wheres.empty?
       raise SqlStmt::Error, "unable to build sql - must call :where, :no_where, or :optional_where"

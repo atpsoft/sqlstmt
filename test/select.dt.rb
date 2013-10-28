@@ -4,13 +4,10 @@ module SqlStmt
 
 class TestSelect < DohTest::TestGroup
   def test_includes_table
-    sqlb = Select.new.table('target')
-    assert(sqlb.includes_table?('target'))
-    assert(!sqlb.includes_table?('blah'))
-
     sqlb = Select.new.table('target t')
-    assert(!sqlb.includes_table?('target'))
-    assert(sqlb.includes_table?('target t'))
+    assert(sqlb.includes_table?('target'))
+    assert(sqlb.includes_table?('t'))
+    assert(!sqlb.includes_table?('blah'))
   end
 
   def test_minimum_requirements
