@@ -3,6 +3,16 @@ require 'sqlstmt/select'
 module SqlStmt
 
 class TestSelect < DohTest::TestGroup
+  def test_includes_table
+    sqlb = Select.new.table('target')
+    assert(sqlb.includes_table?('target'))
+    assert(!sqlb.includes_table?('blah'))
+
+    sqlb = Select.new.table('target t')
+    assert(!sqlb.includes_table?('target'))
+    assert(sqlb.includes_table?('target t'))
+  end
+
   def test_minimum_requirements
     assert_raises(SqlStmt::Error) { Select.new.table('target').to_s }
     assert_raises(SqlStmt::Error) { Select.new.table('target').no_where.to_s }
