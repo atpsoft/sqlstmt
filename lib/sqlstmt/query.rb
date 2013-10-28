@@ -26,7 +26,7 @@ class Query
   end
 
   def optional_join(table, expr)
-    unless find_join(table)
+    unless has_join_or_table?(table)
       join(table, expr)
     end
   end
@@ -67,7 +67,8 @@ class Query
   end
 
 private
-  def find_join(table_to_find)
+  def has_join_or_table?(table_to_find)
+    return true if @tables.include?(table_to_find)
     @joins.find do |_, table, _|
       table_to_find == table
     end
