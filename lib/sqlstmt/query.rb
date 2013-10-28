@@ -26,7 +26,7 @@ class Query
   end
 
   def optional_join(table, expr)
-    unless has_join_or_table?(table)
+    unless includes_table?(table)
       join(table, expr)
     end
   end
@@ -66,14 +66,14 @@ class Query
     build_stmt
   end
 
-private
-  def has_join_or_table?(table_to_find)
+  def includes_table?(table_to_find)
     return true if @tables.include?(table_to_find)
     @joins.find do |_, table, _|
       table_to_find == table
     end
   end
 
+private
   def verify_minimum_requirements
     if (@where_behavior == :require) && @wheres.empty?
       raise SqlStmt::Error, "unable to build sql - must call :where, :no_where, or :optional_where"
