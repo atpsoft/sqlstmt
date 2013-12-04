@@ -20,8 +20,8 @@ class Query
     self
   end
 
-  def join(table, expr)
-    @joins << ['JOIN', table, "ON #{expr}"]
+  def join(table, *exprs)
+    @joins << ['JOIN', table, "ON #{exprs.join(' AND ')}"]
     self
   end
 
@@ -36,8 +36,8 @@ class Query
     self
   end
 
-  def left_join(table, expr)
-    @joins << ['LEFT JOIN', table, "ON #{expr}"]
+  def left_join(table, *exprs)
+    @joins << ['LEFT JOIN', table, "ON #{exprs.join(' AND ')}"]
     self
   end
 

@@ -42,6 +42,14 @@ class TestSelect < DohTest::TestGroup
     sqlb.optional_join('other o', 'z.blee_id = o.blee_id')
     assert_equal('SELECT frog FROM source s JOIN other o ON z.blee_id = o.blee_id', sqlb.to_s)
   end
+
+  def test_join_with_multiple_conditions
+    %i(join left_join).each do |method|
+      sqlb = Select.new.table('source s').field('frog').no_where.send(method, 'other o', 'z.blee_id = o.blee_id', 'z.other_field = o.other_field')
+      method_sql = method.to_s.upcase.sub('_', ' ')
+      assert_equal("SELECT frog FROM source s #{method_sql} other o ON z.blee_id = o.blee_id AND z.other_field = o.other_field", sqlb.to_s)
+    end
+  end
 end
 
 end
