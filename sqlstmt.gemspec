@@ -2,7 +2,7 @@ require 'rake'
 
 Gem::Specification.new do |s|
   s.name = 'sqlstmt'
-  s.version = '0.1.21'
+  s.version = '0.1.22'
   s.summary = 'build SQL statements in a modular fashion, one piece at a time'
   s.description = 'build SQL statements in a modular fashion, one piece at a time; only used/tested with MySQL so far'
   s.require_path = 'lib'

@@ -55,7 +55,7 @@ private
     group_clause = simple_clause('GROUP BY', @group_by)
     order_clause = simple_clause('ORDER BY', @order_by)
     limit_clause = simple_clause('LIMIT', @limit)
-    " FROM #{build_table_list}#{join_clause}#{build_where_clause}#{group_clause}#{order_clause}#{limit_clause}#{having_clause}"
+    " FROM #{build_table_list}#{join_clause}#{build_where_clause}#{group_clause}#{having_clause}#{order_clause}#{limit_clause}"
   end
 end
 
