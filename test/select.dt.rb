@@ -29,16 +29,16 @@ class TestSelect < DohTest::TestGroup
   end
 
   def test_duplicate_joins
-    base_sqlb = Select.new.table('source s').field('frog').no_where
-
-    sqlb = base_sqlb.dup
+    sqlb = Select.new.table('source s').field('frog').no_where
     4.times { sqlb.join('other o', 's.blah_id = o.blah_id') }
+    assert_equal('SELECT frog FROM source s JOIN other o ON s.blah_id = o.blah_id', sqlb.to_s)
+  end
+
+  def test_optional_join
+    sqlb = Select.new.table('source s').field('frog').no_where
+    sqlb.join('other o', 's.blah_id = o.blah_id')
     sqlb.optional_join('other o', 'z.blee_id = o.blee_id')
     assert_equal('SELECT frog FROM source s JOIN other o ON s.blah_id = o.blah_id', sqlb.to_s)
-
-    sqlb = base_sqlb.dup
-    sqlb.optional_join('other o', 'z.blee_id = o.blee_id')
-    assert_equal('SELECT frog FROM source s JOIN other o ON z.blee_id = o.blee_id', sqlb.to_s)
   end
 
   def test_join_with_multiple_conditions
