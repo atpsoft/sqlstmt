@@ -31,18 +31,8 @@ class Query
     end
   end
 
-  def join_using(table, *fields)
-    @joins << ['JOIN', table, "USING (#{fields.join(',')})"]
-    self
-  end
-
   def left_join(table, *exprs)
     @joins << ['LEFT JOIN', table, "ON #{exprs.join(' AND ')}"]
-    self
-  end
-
-  def left_join_using(table, *fields)
-    @joins << ['LEFT JOIN', table, "USING (#{fields.join(',')})"]
     self
   end
 
