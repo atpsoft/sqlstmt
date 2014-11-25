@@ -65,6 +65,7 @@ class Query
     verify_minimum_requirements
     build_stmt
   end
+  alias_method :to_sql, :to_s
 
   def includes_table?(table_to_find)
     retval = @tables.find { |table| table_names_match?(table, table_to_find) }

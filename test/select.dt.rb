@@ -14,7 +14,7 @@ class TestSelect < DohTest::TestGroup
     assert_raises(SqlStmt::Error) { Select.new.table('target').to_s }
     assert_raises(SqlStmt::Error) { Select.new.table('target').no_where.to_s }
     assert_raises(SqlStmt::Error) { Select.new.table('target').optional_where.to_s }
-    assert_equal('SELECT blah FROM target', Select.new.table('target').optional_where.field('blah').to_s)
+    assert_equal('SELECT blah FROM target', Select.new.table('target').optional_where.field('blah').to_sql)
   end
 
   def test_stuff
