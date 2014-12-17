@@ -10,6 +10,7 @@ class TestUpdate < DohTest::TestGroup
 
   def test_simple
     assert_equal('UPDATE target SET blah = blee', Update.new.table('target').field('blah', 'blee').no_where.to_s)
+    assert_equal('UPDATE target SET blah = blee LIMIT 3', Update.new.table('target').field('blah', 'blee').no_where.limit(3).to_s)
     assert_equal('UPDATE target SET blah = blee WHERE target_id = 1', Update.new.table('target').field('blah', 'blee').where('target_id = 1').to_s)
   end
 

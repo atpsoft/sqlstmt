@@ -28,7 +28,8 @@ private
   end
 
   def build_stmt
-    "UPDATE #{build_table_list}#{build_join_clause} SET #{build_set_clause}#{build_where_clause}"
+    limit_clause = simple_clause('LIMIT', @limit)
+    "UPDATE #{build_table_list}#{build_join_clause} SET #{build_set_clause}#{build_where_clause}#{limit_clause}"
   end
 end
 

@@ -7,7 +7,6 @@ class FromQuery < Query
     super
     @group_by = nil
     @order_by = nil
-    @limit = nil
     @having = []
   end
 
@@ -21,11 +20,6 @@ class FromQuery < Query
     self
   end
 
-  def limit(clause)
-    @limit = clause
-    self
-  end
-
   def having(*sql)
     @having.concat(sql)
     self
@@ -36,10 +30,6 @@ private
     super
     raise SqlStmt::Error, "unable to build sql - must call :table or :join (or one if it's variants)" if @tables.empty? && @joins.empty?
     raise SqlStmt::Error, "unable to build sql - must call :table if using :join (or one if it's variants)" if @tables.empty? && !@joins.empty?
-  end
-
-  def simple_clause(keywords, value)
-    if value then " #{keywords} #{value}" else '' end
   end
 
   def having_clause

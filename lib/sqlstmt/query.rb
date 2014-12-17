@@ -13,6 +13,7 @@ class Query
     @joins = []
     @wheres = []
     @where_behavior = :require
+    @limit = nil
   end
 
   def table(table)
@@ -51,6 +52,11 @@ class Query
     self
   end
 
+  def limit(clause)
+    @limit = clause
+    self
+  end
+
   def to_s
     verify_minimum_requirements
     build_stmt
@@ -82,6 +88,10 @@ private
 
   def build_table_list
     @tables.join(',')
+  end
+
+  def simple_clause(keywords, value)
+    if value then " #{keywords} #{value}" else '' end
   end
 
   def build_join_clause
