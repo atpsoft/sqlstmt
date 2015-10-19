@@ -19,6 +19,11 @@ class Select < FromQuery
     self
   end
 
+  def straight_join
+    @straight_join = true
+    self
+  end
+
   def into_outfile(str)
     @into = "OUTFILE #{str}"
     self
@@ -31,10 +36,11 @@ private
   end
 
   def build_stmt
+    straight_join_str = if @straight_join then 'STRAIGHT_JOIN ' else '' end
     distinct_str = if @distinct then 'DISTINCT ' else '' end
     into_str = if @into then " INTO #{@into}" else '' end
     select_str = @fields.join(',')
-    "SELECT #{distinct_str}#{select_str}#{build_from_clause}#{into_str}"
+    "SELECT #{straight_join_str}#{distinct_str}#{select_str}#{build_from_clause}#{into_str}"
   end
 end
 
