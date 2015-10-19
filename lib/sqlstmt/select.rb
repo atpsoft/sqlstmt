@@ -6,6 +6,7 @@ class Select < FromQuery
   def initialize
     super
     @distinct = false
+    @straight_join = false
     @into = nil
   end
 
