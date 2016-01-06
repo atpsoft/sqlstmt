@@ -2,8 +2,8 @@ require_relative 'helper'
 
 class TestUpdate < Minitest::Test
   def test_minimum_requirements
-    assert_raises(SqlStmt::Error) { Update.new.table('target').to_s }
-    assert_raises(SqlStmt::Error) { Update.new.table('target').no_where.to_s }
+    assert_raises(SqlStmtError) { Update.new.table('target').to_s }
+    assert_raises(SqlStmtError) { Update.new.table('target').no_where.to_s }
   end
 
   def test_simple

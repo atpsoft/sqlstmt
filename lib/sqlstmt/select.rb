@@ -33,7 +33,7 @@ class Select < FromQuery
 private
   def verify_minimum_requirements
     super
-    raise SqlStmt::Error, "unable to build sql - must call :field" if @fields.empty?
+    raise SqlStmtError, "unable to build sql - must call :field" if @fields.empty?
   end
 
   def build_stmt

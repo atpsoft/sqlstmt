@@ -28,8 +28,8 @@ class FromQuery < Query
 private
   def verify_minimum_requirements
     super
-    raise SqlStmt::Error, "unable to build sql - must call :table or :join (or one if it's variants)" if @tables.empty? && @joins.empty?
-    raise SqlStmt::Error, "unable to build sql - must call :table if using :join (or one if it's variants)" if @tables.empty? && !@joins.empty?
+    raise SqlStmtError, "unable to build sql - must call :table or :join (or one if it's variants)" if @tables.empty? && @joins.empty?
+    raise SqlStmtError, "unable to build sql - must call :table if using :join (or one if it's variants)" if @tables.empty? && !@joins.empty?
   end
 
   def having_clause

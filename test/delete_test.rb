@@ -2,7 +2,7 @@ require_relative 'helper'
 
 class TestDelete < Minitest::Test
   def test_minimum_requirements
-    assert_raises(SqlStmt::Error) { Delete.new.table('target').to_s }
+    assert_raises(SqlStmtError) { Delete.new.table('target').to_s }
   end
 
   def test_simple

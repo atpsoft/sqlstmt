@@ -32,8 +32,8 @@ class InsertSelect < FromQuery
 private
   def verify_minimum_requirements
     super
-    raise SqlStmt::Error, "unable to build sql - must call :into" if @into_table.nil?
-    raise SqlStmt::Error, "unable to build sql - must call :field or :fieldq" if @fields.empty?
+    raise SqlStmtError, "unable to build sql - must call :into" if @into_table.nil?
+    raise SqlStmtError, "unable to build sql - must call :field or :fieldq" if @fields.empty?
   end
 
   def build_stmt

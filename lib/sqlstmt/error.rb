@@ -1,5 +1,1 @@
-module SqlStmt
-
-class Error < StandardError; end
-
-end
+class SqlStmtError < StandardError; end

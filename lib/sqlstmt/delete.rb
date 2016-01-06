@@ -19,7 +19,7 @@ private
   def verify_minimum_requirements
     super
     combined_table_count = @tables.size + @joins.size
-    raise SqlStmt::Error, "unable to build sql - must call :from when including multiple tables" if @from_tables.empty? && (combined_table_count > 1)
+    raise SqlStmtError, "unable to build sql - must call :from when including multiple tables" if @from_tables.empty? && (combined_table_count > 1)
   end
 
   def build_stmt
