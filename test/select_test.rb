@@ -1,5 +1,4 @@
 require_relative 'helper'
-require 'sqlstmt/select'
 
 class TestSelect < Minitest::Test
   def test_includes_table

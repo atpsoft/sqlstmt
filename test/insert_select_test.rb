@@ -1,5 +1,4 @@
 require_relative 'helper'
-require 'sqlstmt/insert_select'
 
 class TestInsertSelect < Minitest::Test
   def test_minimum_requirements

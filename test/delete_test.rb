@@ -1,5 +1,4 @@
 require_relative 'helper'
-require 'sqlstmt/delete'
 
 class TestDelete < Minitest::Test
   def test_minimum_requirements

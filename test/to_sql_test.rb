@@ -1,5 +1,4 @@
 require_relative 'helper'
-require 'sqlstmt/to_sql'
 
 class Test_to_sql < Minitest::Test
   def test_stuff

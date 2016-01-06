@@ -1,5 +1,4 @@
 require_relative 'helper'
-require 'sqlstmt/update'
 
 class TestUpdate < Minitest::Test
   def test_minimum_requirements
