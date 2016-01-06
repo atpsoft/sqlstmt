@@ -1,8 +1,6 @@
 require_relative 'helper'
 require 'sqlstmt/select'
 
-module SqlStmt
-
 class TestSelect < Minitest::Test
   def test_includes_table
     sqlb = Select.new.table('target t')
@@ -49,6 +47,4 @@ class TestSelect < Minitest::Test
       assert_equal("SELECT frog FROM source s #{method_sql} other o ON z.blee_id = o.blee_id AND z.other_field = o.other_field", sqlb.to_s)
     end
   end
-end
-
 end

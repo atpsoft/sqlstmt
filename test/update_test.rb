@@ -1,8 +1,6 @@
 require_relative 'helper'
 require 'sqlstmt/update'
 
-module SqlStmt
-
 class TestUpdate < Minitest::Test
   def test_minimum_requirements
     assert_raises(SqlStmt::Error) { Update.new.table('target').to_s }
@@ -59,6 +57,4 @@ class TestUpdate < Minitest::Test
     assert_equal('UPDATE target,shared_tbl SET created_at = NOW(), duration = 5, is_bad = 1 WHERE status="bad"', first_builder.to_s)
     assert_equal('UPDATE target,shared_tbl,other_tbl o SET created_at = NOW(), duration = 5, is_bad = 1, info = o.info, data = o.data WHERE s.id=o.shared_id AND status="good"', other_builder.to_s)
   end
-end
-
 end

@@ -1,8 +1,6 @@
 require_relative 'helper'
 require 'sqlstmt/to_sql'
 
-module SqlStmt
-
 class Test_to_sql < Minitest::Test
   def test_stuff
     assert_equal("'blah'", 'blah'.to_sql)
@@ -16,6 +14,3 @@ class Test_to_sql < Minitest::Test
     assert_equal("('a','b','c')", ['a', 'b', 'c'].to_sql)
   end
 end
-
-end
-

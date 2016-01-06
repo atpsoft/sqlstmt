@@ -1,8 +1,6 @@
 require_relative 'helper'
 require 'sqlstmt/insert_select'
 
-module SqlStmt
-
 class TestInsertSelect < Minitest::Test
   def test_minimum_requirements
     assert_raises(SqlStmt::Error) { InsertSelect.new.insert_into('target').to_s }
@@ -51,6 +49,4 @@ class TestInsertSelect < Minitest::Test
     assert_equal("INSERT INTO target (created_at,duration,is_bad) SELECT NOW(),5,'b' FROM shared_tbl WHERE status='bad'", first_builder.to_s)
     assert_equal("INSERT INTO target (created_at,duration,is_bad,info,data) SELECT NOW(),5,'b',o.info,o.data FROM shared_tbl,other_tbl o WHERE s.id=o.shared_id AND status='good'", other_builder.to_s)
   end
-end
-
 end
