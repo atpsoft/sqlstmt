@@ -1,8 +1,9 @@
+require_relative 'helper'
 require 'sqlstmt/insert_select'
 
 module SqlStmt
 
-class TestInsertSelect < DohTest::TestGroup
+class TestInsertSelect < Minitest::Test
   def test_minimum_requirements
     assert_raises(SqlStmt::Error) { InsertSelect.new.insert_into('target').to_s }
     assert_raises(SqlStmt::Error) { InsertSelect.new.insert_into('target').no_where.to_s }

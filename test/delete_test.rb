@@ -1,8 +1,9 @@
+require_relative 'helper'
 require 'sqlstmt/delete'
 
 module SqlStmt
 
-class TestDelete < DohTest::TestGroup
+class TestDelete < Minitest::Test
   def test_minimum_requirements
     assert_raises(SqlStmt::Error) { Delete.new.table('target').to_s }
   end

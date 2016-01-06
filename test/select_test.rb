@@ -1,8 +1,9 @@
+require_relative 'helper'
 require 'sqlstmt/select'
 
 module SqlStmt
 
-class TestSelect < DohTest::TestGroup
+class TestSelect < Minitest::Test
   def test_includes_table
     sqlb = Select.new.table('target t')
     assert(sqlb.includes_table?('target'))

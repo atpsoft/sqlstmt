@@ -1,8 +1,9 @@
+require_relative 'helper'
 require 'sqlstmt/to_sql'
 
 module SqlStmt
 
-class Test_to_sql < DohTest::TestGroup
+class Test_to_sql < Minitest::Test
   def test_stuff
     assert_equal("'blah'", 'blah'.to_sql)
     assert_equal('NULL', nil.to_sql)
