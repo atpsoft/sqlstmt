@@ -2,18 +2,18 @@ require_relative 'helper'
 
 class TestInsertSelect < Minitest::Test
   def test_minimum_requirements
-    assert_raises(SqlStmtError) { SqlStmtInsertSelect.new.insert_into('target').to_s }
-    assert_raises(SqlStmtError) { SqlStmtInsertSelect.new.insert_into('target').no_where.to_s }
-    assert_raises(SqlStmtError) { SqlStmtInsertSelect.new.insert_into('target').no_where.field('blah', 'blee').to_s }
+    assert_raises(SqlStmtError) { SqlStmt.new.insert.into('target').to_s }
+    assert_raises(SqlStmtError) { SqlStmt.new.insert.into('target').no_where.to_s }
+    assert_raises(SqlStmtError) { SqlStmt.new.insert.into('target').no_where.field('blah', 'blee').to_s }
   end
 
   def test_simple
-    assert_equal('INSERT INTO target (blah) SELECT blee FROM source', SqlStmtInsertSelect.new.insert_into('target').table('source').field('blah', 'blee').no_where.to_s)
-    assert_equal('INSERT INTO target (blah) SELECT blee FROM source WHERE source_id = 1', SqlStmtInsertSelect.new.insert_into('target').table('source').field('blah', 'blee').where('source_id = 1').to_s)
+    assert_equal('INSERT INTO target (blah) SELECT blee FROM source', SqlStmt.new.insert.into('target').table('source').field('blah', 'blee').no_where.to_s)
+    assert_equal('INSERT INTO target (blah) SELECT blee FROM source WHERE source_id = 1', SqlStmt.new.insert.into('target').table('source').field('blah', 'blee').where('source_id = 1').to_s)
   end
 
   def test_dup
-    shared_builder = SqlStmtInsertSelect.new.insert_into('target')
+    shared_builder = SqlStmt.new.insert.into('target')
     first_builder = shared_builder
     other_builder = shared_builder.dup
 
@@ -31,7 +31,7 @@ class TestInsertSelect < Minitest::Test
   end
 
   def test_complex
-    shared_builder = SqlStmtInsertSelect.new.insert_into('target')
+    shared_builder = SqlStmt.new.insert.into('target')
     shared_builder.table('shared_tbl')
     shared_builder.field('created_at', 'NOW()').field('duration', 5).fieldq('is_bad', 'b')
 
