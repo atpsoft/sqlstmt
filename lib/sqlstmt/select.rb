@@ -1,8 +1,6 @@
 require 'sqlstmt/from_query'
 
-module SqlStmt
-
-class Select < FromQuery
+class SqlStmtSelect < SqlStmtFromQuery
   def initialize
     super
     @distinct = false
@@ -43,6 +41,4 @@ private
     select_str = @fields.join(',')
     "SELECT #{straight_join_str}#{distinct_str}#{select_str}#{build_from_clause}#{into_str}"
   end
-end
-
 end

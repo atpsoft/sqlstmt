@@ -1,9 +1,7 @@
 require 'dohutil/core_ext/force_deep_copy'
 require 'sqlstmt/error'
 
-module SqlStmt
-
-class Query
+class SqlStmtQuery
   force_deep_copy :fields, :tables, :joins, :wheres
   attr_reader :fields, :tables, :joins, :wheres
 
@@ -105,6 +103,4 @@ private
   def build_where_clause
     if @wheres.empty? then '' else " WHERE #{@wheres.join(' AND ')}" end
   end
-end
-
 end

@@ -1,8 +1,6 @@
 require 'sqlstmt/from_query'
 
-module SqlStmt
-
-class Delete < FromQuery
+class SqlStmtDelete < SqlStmtFromQuery
   force_deep_copy :from_tables
 
   def initialize
@@ -30,6 +28,4 @@ private
     end
     "DELETE#{table_clause}#{build_from_clause}"
   end
-end
-
 end

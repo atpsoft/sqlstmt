@@ -1,11 +1,9 @@
 require 'sqlstmt/from_query'
 require 'sqlstmt/value_util'
 
-module SqlStmt
-
-class InsertValues < FromQuery
+class SqlStmtInsertValues < SqlStmtFromQuery
   force_deep_copy :values
-  include ValueUtil
+  include SqlStmtValueUtil
 
   def initialize
     super
@@ -32,6 +30,4 @@ private
     values_str = @values.join(',')
     "INSERT INTO #@into_table (#{into_str}) VALUES (#{values_str})"
   end
-end
-
 end

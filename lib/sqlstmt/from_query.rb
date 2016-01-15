@@ -1,8 +1,6 @@
 require 'sqlstmt/query'
 
-module SqlStmt
-
-class FromQuery < Query
+class SqlStmtFromQuery < SqlStmtQuery
   def initialize
     super
     @group_by = nil
@@ -47,6 +45,4 @@ private
     limit_clause = simple_clause('LIMIT', @limit)
     " FROM #{build_table_list}#{join_clause}#{build_where_clause}#{group_clause}#{having_clause}#{order_clause}#{limit_clause}"
   end
-end
-
 end

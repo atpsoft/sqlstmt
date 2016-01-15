@@ -1,11 +1,9 @@
 require 'sqlstmt/query'
 require 'sqlstmt/value_util'
 
-module SqlStmt
-
-class Update < Query
+class SqlStmtUpdate < SqlStmtQuery
   force_deep_copy :values
-  include ValueUtil
+  include SqlStmtValueUtil
 
   def initialize
     super
@@ -31,6 +29,4 @@ private
     limit_clause = simple_clause('LIMIT', @limit)
     "UPDATE #{build_table_list}#{build_join_clause} SET #{build_set_clause}#{build_where_clause}#{limit_clause}"
   end
-end
-
 end

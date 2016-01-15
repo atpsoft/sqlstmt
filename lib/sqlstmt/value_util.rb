@@ -1,6 +1,6 @@
 require 'sqlstmt/to_sql'
 
-module ValueUtil
+module SqlStmtValueUtil
   def field(field, value)
     raise "trying to include field #{field} again" if @fields.include?(field)
     @fields.push(field)
