@@ -1,6 +1,1 @@
-require 'sqlstmt/select'
-require 'sqlstmt/update'
-require 'sqlstmt/insert_select'
-require 'sqlstmt/delete'
-require 'sqlstmt/insert_values'
 require 'sqlstmt/sqlstmt'
