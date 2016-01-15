@@ -284,7 +284,7 @@ private
     keyword = @replace ? 'REPLACE' : 'INSERT'
     field_list = @fields.join(',')
     value_list = @values.join(',')
-    start_str = "INSERT #{@ignore}INTO #{@into_table} (#{field_list}) "
+    start_str = "#{keyword} #{@ignore}INTO #{@into_table} (#{field_list}) "
 
     if @rows.empty?
       distinct_str = @distinct ? 'DISTINCT ' : ''
