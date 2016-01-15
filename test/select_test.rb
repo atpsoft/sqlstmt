@@ -32,13 +32,6 @@ class TestSelect < Minitest::Test
     assert_equal('SELECT frog FROM source s JOIN other o ON s.blah_id = o.blah_id', sqlb.to_s)
   end
 
-  def test_optional_join
-    sqlb = SqlStmt.new.select.table('source s').get('frog').no_where
-    sqlb.join('other o', 's.blah_id = o.blah_id')
-    sqlb.optional_join('other o', 'z.blee_id = o.blee_id')
-    assert_equal('SELECT frog FROM source s JOIN other o ON s.blah_id = o.blah_id', sqlb.to_s)
-  end
-
   def test_join_with_multiple_conditions
     %i(join left_join).each do |method|
       sqlb = SqlStmt.new.select.table('source s').get('frog').no_where.send(method, 'other o', 'z.blee_id = o.blee_id', 'z.other_field = o.other_field')
