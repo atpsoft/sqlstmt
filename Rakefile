@@ -1,4 +1,5 @@
 require 'rake/testtask'
+require 'minitest'
 
 task :default => :test
 
