@@ -222,40 +222,28 @@ private
 
   def verify_minimum_requirements
     if !@stmt_type
-      raise SqlStmtError, "unable to build sql - must specify statement type"
-    elsif (@where_behavior == :require) && @wheres.empty?
+      raise SqlStmtError, "unable to build sql - must call :select, :update, :insert or :delete to specify statement type"
+    elsif @tables.empty?
+      raise SqlStmtError, "unable to build sql - must call :table"
+    end
+
+    if (@where_behavior == :require) && @wheres.empty?
       raise SqlStmtError, "unable to build sql - must call :where, :no_where, or :optional_where"
     elsif (@where_behavior == :exclude) && !@wheres.empty?
       raise SqlStmtError, "unable to build sql - :where and :no_where must not both be called, consider :optional_where instead"
     end
 
-    if ['select','insert','delete'].include?(@stmt_type)
-      raise SqlStmtError, "unable to build sql - must call :table or :join (or one if it's variants)" if @tables.empty? && @joins.empty?
-      raise SqlStmtError, "unable to build sql - must call :table if using :join (or one if it's variants)" if @tables.empty? && !@joins.empty?
-    end
-
     if @stmt_type == 'select'
-      raise SqlStmtError, "unable to build sql - must call :field" if @fields.empty?
-    end
-
-    if @stmt_type == 'insert_values'
+      raise SqlStmtError, "unable to build sql - must call :get" if @fields.empty?
+    elsif @stmt_type == 'update'
+      raise SqlStmtError, "unable to build sql - must call :set or :setq" if @fields.empty?
+    elsif @stmt_type == 'insert'
       raise SqlStmtError, "unable to build sql - must call :into" if @into_table.nil?
-      raise SqlStmtError, "unable to build sql - must call :field or :fieldq" if @fields.empty?
-    end
-
-    if @stmt_type == 'insert_select'
-      raise SqlStmtError, "unable to build sql - must call :into" if @into_table.nil?
-      raise SqlStmtError, "unable to build sql - must call :field or :fieldq" if @fields.empty?
-    end
-
-    if @stmt_type == 'update'
-      raise SqlStmtError, "unable to build sql - must call :table" if @tables.empty?
-      raise SqlStmtError, "unable to build sql - must call :field or :fieldq" if @fields.empty?
-    end
-
-    if @stmt_type == 'delete'
-      combined_table_count = @tables.size + @joins.size
-      raise SqlStmtError, "unable to build sql - must call :from when including multiple tables" if @tables_to_delete.empty? && (combined_table_count > 1)
+      raise SqlStmtError, "unable to build sql - must call :set or :setq" if @fields.empty?
+    elsif @stmt_type == 'delete'
+      if @tables_to_delete.empty? && ((@tables.size + @joins.size) > 1)
+        raise SqlStmtError, "unable to build sql - must specify tables to delete when including multiple tables"
+      end
     end
   end
 
