@@ -185,22 +185,6 @@ class SqlStmt
     return retval
   end
 
-  ###### transition only mechanisms
-  def field(*args)
-    if ['update','insert'].include?(@stmt_type)
-      set(args[0], args[1])
-    else
-      get(*args)
-    end
-  end
-  alias_method :fieldq, :setq
-
-  def optional_join(table, expr)
-    unless includes_table?(table)
-      join(table, expr)
-    end
-  end
-
 private
   def ensure_no_statement_type
     if @stmt_type
