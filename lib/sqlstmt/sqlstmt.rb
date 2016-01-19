@@ -24,6 +24,8 @@ class SqlStmt
     @replace = nil
     @ignore = ''
     @outfile = ''
+    # track this explicitly to guarantee get is not used with non-select statements
+    @called_get = false
   end
 
   def initialize_copy(orig)
@@ -96,6 +98,7 @@ class SqlStmt
 
   def get(*exprs)
     @fields.concat(exprs)
+    @called_get = true
     return self
   end
 
@@ -236,18 +239,22 @@ private
 
     if @stmt_type == 'select'
       raise SqlStmtError, "unable to build sql - must call :get" if @fields.empty?
+      raise SqlStmtError, "unable to build sql - must not call :set" if !@values.empty?
+    else
+      raise SqlStmtError, "unable to build sql - must not call :get" if @called_get
     end
 
-    if @stmt_type == 'update'
+    if ['update','insert'].include?(@stmt_type)
       raise SqlStmtError, "unable to build sql - must call :set or :setq" if @fields.empty?
+      raise SqlStmtError, "unable to build sql - must not call :get" if @called_get
     end
 
     if @stmt_type == 'insert'
       raise SqlStmtError, "unable to build sql - must call :into" if @into_table.nil?
-      raise SqlStmtError, "unable to build sql - must call :set or :setq" if @fields.empty?
     end
 
     if @stmt_type == 'delete'
+      raise SqlStmtError, "unable to build sql - must not call :get or :set" if !@fields.empty?
       if @tables_to_delete.empty? && ((@tables.size + @joins.size) > 1)
         raise SqlStmtError, "unable to build sql - must specify tables to delete when including multiple tables"
       end
