@@ -1,5 +1,4 @@
 require 'rake/testtask'
-require 'minitest/autorun'
 
 task :default => :test
 
