@@ -223,7 +223,8 @@ private
   def verify_minimum_requirements
     if !@stmt_type
       raise SqlStmtError, "unable to build sql - must call :select, :update, :insert or :delete to specify statement type"
-    elsif @tables.empty?
+    end
+    if @tables.empty?
       raise SqlStmtError, "unable to build sql - must call :table"
     end
 
@@ -235,12 +236,18 @@ private
 
     if @stmt_type == 'select'
       raise SqlStmtError, "unable to build sql - must call :get" if @fields.empty?
-    elsif @stmt_type == 'update'
+    end
+
+    if @stmt_type == 'update'
       raise SqlStmtError, "unable to build sql - must call :set or :setq" if @fields.empty?
-    elsif @stmt_type == 'insert'
+    end
+
+    if @stmt_type == 'insert'
       raise SqlStmtError, "unable to build sql - must call :into" if @into_table.nil?
       raise SqlStmtError, "unable to build sql - must call :set or :setq" if @fields.empty?
-    elsif @stmt_type == 'delete'
+    end
+
+    if @stmt_type == 'delete'
       if @tables_to_delete.empty? && ((@tables.size + @joins.size) > 1)
         raise SqlStmtError, "unable to build sql - must specify tables to delete when including multiple tables"
       end
