@@ -104,7 +104,11 @@ class SqlStmt
 
   def set(field, value)
     raise "trying to include field #{field} again" if @fields.include?(field)
-    @fields << field
+    # this is to support the special case of INSERT INTO table SELECT * FROM ...
+    # where * specified with no matching insert field list specified
+    if field
+      @fields << field
+    end
     value = value.is_a?(String) ? value : value.to_sql
     @values << value
     return self
@@ -229,7 +233,7 @@ private
     end
 
     if ['update','insert'].include?(@stmt_type)
-      raise SqlStmtError, "unable to build sql - must call :set or :setq" if @fields.empty?
+      raise SqlStmtError, "unable to build sql - must call :set or :setq" if @values.empty?
       raise SqlStmtError, "unable to build sql - must not call :get" if @called_get
     end
 
@@ -268,9 +272,12 @@ private
     end
 
     keyword = @replace ? 'REPLACE' : 'INSERT'
-    field_list = @fields.join(',')
     value_list = @values.join(',')
-    start_str = "#{keyword} #{@ignore}INTO #{@into_table} (#{field_list}) "
+    start_str = "#{keyword} #{@ignore}INTO #{@into_table} "
+    if !@fields.empty?
+      field_list = @fields.join(',')
+      start_str += "(#{field_list}) "
+    end
 
     if @rows.empty?
       distinct_str = @distinct ? 'DISTINCT ' : ''

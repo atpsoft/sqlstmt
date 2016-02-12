@@ -12,6 +12,10 @@ class TestInsertSelect < Minitest::Test
     assert_equal('INSERT INTO target (blah) SELECT blee FROM source WHERE source_id = 1', SqlStmt.new.insert.into('target').table('source').set('blah', 'blee').where('source_id = 1').to_s)
   end
 
+  def test_star
+    assert_equal('INSERT INTO target SELECT * FROM source', SqlStmt.new.insert.into('target').table('source').set(nil, '*').no_where.to_s)
+  end
+
   def test_dup
     shared_builder = SqlStmt.new.insert.into('target')
     first_builder = shared_builder
