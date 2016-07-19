@@ -3,7 +3,7 @@ require 'sqlstmt/to_sql'
 
 class SqlStmt
   attr_reader :fields, :tables, :joins, :wheres
-  Table = Struct.new(:str, :name, :alias)
+  Table = Struct.new(:str, :name, :alias, :index)
 
   def initialize
     @stmt_type = nil
@@ -69,9 +69,9 @@ class SqlStmt
 
   ###### common operations
 
-  def table(table_str)
+  def table(table_str, use_index = nil)
     parts = table_str.split(' ')
-    table_obj = Table.new(table_str, parts[0], parts[1])
+    table_obj = Table.new(table_str, parts[0], parts[1], use_index)
     @tables << table_obj
     return self
   end
@@ -317,8 +317,15 @@ private
     return set_exprs.join(', ')
   end
 
+  def table_to_str(table)
+    if table.index
+      return "#{table.str} USE INDEX (#{table.index})"
+    end
+    return table.str
+  end
+
   def build_table_list
-    return @tables.map {|table| table.str }.join(',')
+    return @tables.map {|table| table_to_str(table) }.join(',')
   end
 
   def simple_clause(keywords, value)

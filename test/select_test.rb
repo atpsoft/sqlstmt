@@ -11,6 +11,7 @@ class TestSelect < Minitest::Test
   def test_tables
     assert_equal('SELECT blah FROM target', SqlStmt.new.select.table('target').no_where.get('blah').to_sql)
     assert_equal('SELECT t.blah FROM target t', SqlStmt.new.select.table('target t').no_where.get('t.blah').to_sql)
+    assert_equal('SELECT t.blah FROM target t USE INDEX (blee)', SqlStmt.new.select.table('target t', 'blee').no_where.get('t.blah').to_sql)
   end
 
   def test_minimum_requirements
