@@ -8,6 +8,11 @@ class TestSelect < Minitest::Test
     assert(!sqlb.includes_table?('blah'))
   end
 
+  def test_tables
+    assert_equal('SELECT blah FROM target', SqlStmt.new.select.table('target').no_where.get('blah').to_sql)
+    assert_equal('SELECT t.blah FROM target t', SqlStmt.new.select.table('target t').no_where.get('t.blah').to_sql)
+  end
+
   def test_minimum_requirements
     assert_raises(SqlStmtError) { SqlStmt.new.select.table('target').to_s }
     assert_raises(SqlStmtError) { SqlStmt.new.select.table('target').no_where.to_s }

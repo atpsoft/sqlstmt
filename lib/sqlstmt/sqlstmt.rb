@@ -3,6 +3,7 @@ require 'sqlstmt/to_sql'
 
 class SqlStmt
   attr_reader :fields, :tables, :joins, :wheres
+  Table = Struct.new(:str, :name, :alias)
 
   def initialize
     @stmt_type = nil
@@ -68,8 +69,10 @@ class SqlStmt
 
   ###### common operations
 
-  def table(table)
-    @tables << table
+  def table(table_str)
+    parts = table_str.split(' ')
+    table_obj = Table.new(table_str, parts[0], parts[1])
+    @tables << table_obj
     return self
   end
 
@@ -184,7 +187,7 @@ class SqlStmt
 
   ###### methods to analyze what the statement contains
   def includes_table?(table_to_find)
-    retval = @tables.find { |table| table_names_match?(table, table_to_find) }
+    retval = @tables.find { |table| (table.name == table_to_find) || (table.alias == table_to_find) }
     retval ||= @joins.find { |_, table, _| table_names_match?(table, table_to_find) }
     return retval
   end
@@ -315,7 +318,7 @@ private
   end
 
   def build_table_list
-    return @tables.join(',')
+    return @tables.map {|table| table.str }.join(',')
   end
 
   def simple_clause(keywords, value)
