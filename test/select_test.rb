@@ -32,6 +32,13 @@ class TestSelect < Minitest::Test
     assert_equal('SELECT blah FROM source HAVING blee > 0', SqlStmt.new.select.table('source').get('blah').no_where.having('blee > 0').to_s)
   end
 
+  def test_group_by
+    sqlb = SqlStmt.new.select.table('source').get('blah').no_where.group_by('blah')
+    assert_equal('SELECT blah FROM source GROUP BY blah', sqlb.to_s)
+    sqlb.with_rollup
+    assert_equal('SELECT blah FROM source GROUP BY blah WITH ROLLUP', sqlb.to_s)
+  end
+
   def test_duplicate_joins
     sqlb = SqlStmt.new.select.table('source s').get('frog').no_where
     4.times { sqlb.join('other o', 's.blah_id = o.blah_id') }

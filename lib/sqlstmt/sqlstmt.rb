@@ -25,6 +25,7 @@ class SqlStmt
     @replace = nil
     @ignore = ''
     @outfile = ''
+    @with_rollup = nil
     # track this explicitly to guarantee get is not used with non-select statements
     @called_get = false
   end
@@ -138,6 +139,11 @@ class SqlStmt
 
   def having(*expr)
     @having.concat(expr)
+    return self
+  end
+
+  def with_rollup
+    @with_rollup = true
     return self
   end
 
@@ -303,6 +309,9 @@ private
   def build_from_clause
     join_clause = build_join_clause
     group_clause = simple_clause('GROUP BY', @group_by)
+    if @with_rollup
+      group_clause += ' WITH ROLLUP'
+    end
     order_clause = simple_clause('ORDER BY', @order_by)
     limit_clause = simple_clause('LIMIT', @limit)
     having_clause = @having.empty? ? '' : " HAVING #{@having.join(' AND ')}"
