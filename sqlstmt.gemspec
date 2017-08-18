@@ -2,10 +2,10 @@ require 'rake'
 
 Gem::Specification.new do |s|
   s.name = 'sqlstmt'
-  s.version = '0.2.7'
+  s.version = '0.2.8'
   s.summary = 'build SQL statements in a modular fashion, one piece at a time'
   s.description = 'build SQL statements in a modular fashion, one piece at a time; only used/tested with MySQL so far'
-  s.required_ruby_version = '>= 2.0.0'
+  s.required_ruby_version = '>= 2.2.0'
   s.authors = ['Makani Mason', 'Kem Mason']
   s.bindir = 'bin'
   s.homepage = 'https://github.com/atpsoft/sqlstmt'
