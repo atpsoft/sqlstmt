@@ -42,6 +42,8 @@ def initialize
 end
 
 def initialize_copy(orig)
+  # without this call to super, any field that we aren't dup'ing here won't be copied
+  super
   self.tables = orig.tables.dup
   self.joins = orig.joins.dup
   self.wheres = orig.wheres.dup
