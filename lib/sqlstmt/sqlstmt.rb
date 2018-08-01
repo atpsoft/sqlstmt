@@ -1,3 +1,4 @@
+require 'sqlstmt/data'
 require 'sqlstmt/error'
 
 # in looking at the implementation, it could be asked:
@@ -12,7 +13,6 @@ require 'sqlstmt/error'
 # meaning, we don't the choice of SQL dialect to be allowed at any time
 class SqlStmt
   attr_reader :fields, :tables, :joins, :wheres
-  Table = Struct.new(:str, :name, :alias, :index)
 
   def initialize
     @stmt_type = nil
@@ -81,7 +81,7 @@ class SqlStmt
 
   def table(table_str, use_index = nil)
     parts = table_str.split(' ')
-    table_obj = Table.new(table_str, parts[0], parts[1], use_index)
+    table_obj = SqlStmtLib::SqlTable.new(table_str, parts[0], parts[1], use_index)
     @tables << table_obj
     return self
   end

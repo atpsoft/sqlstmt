@@ -1,6 +1,8 @@
 module SqlStmtLib
 extend self
 
+SqlTable = Struct.new(:str, :name, :alias, :index)
+
 SqlData = Struct.new(
   :stmt_type,
   :tables,
