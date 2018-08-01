@@ -9,6 +9,8 @@ require 'sqlstmt/to_sql'
 # namely, to build the statement gradually and in no particular order, even the statement type
 # for example, we might build a statement and add a where clause to it
 # and some step later on would determine the statement type
+# also, looking to the future of supporting other dialects of SQL, I think the same will be true there
+# meaning, we don't the choice of SQL dialect to be allowed at any time
 class SqlStmt
   attr_reader :fields, :tables, :joins, :wheres
   Table = Struct.new(:str, :name, :alias, :index)
