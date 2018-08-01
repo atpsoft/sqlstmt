@@ -1,5 +1,4 @@
 require 'sqlstmt/error'
-require 'sqlstmt/core_to_sql'
 
 # in looking at the implementation, it could be asked:
 # why are there not individual classes for each statement type?
