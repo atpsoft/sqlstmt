@@ -1,6 +1,14 @@
 require 'sqlstmt/error'
 require 'sqlstmt/to_sql'
 
+# in looking at the implementation, it could be asked:
+# why are there not individual classes for each statement type?
+# and indeed, it does seem a natural fit, and the first version was built that way
+# however, this meant that the statement type had to be determined at object creation time
+# and for some cases this was a limitation and in general went against the purposes of this library
+# namely, to build the statement gradually and in no particular order, even the statement type
+# for example, we might build a statement and add a where clause to it
+# and some step later on would determine the statement type
 class SqlStmt
   attr_reader :fields, :tables, :joins, :wheres
   Table = Struct.new(:str, :name, :alias, :index)
