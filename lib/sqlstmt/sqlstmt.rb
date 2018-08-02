@@ -56,8 +56,7 @@ class SqlStmt
 
   def table(str, use_index = nil)
     tbl_name, tbl_alias = str.split(' ')
-    table_obj = SqlStmtLib::SqlTable.new(str, tbl_name, tbl_alias, use_index)
-    @data.tables << table_obj
+    @data.tables << SqlStmtLib::SqlTable.new(str, tbl_name, tbl_alias, use_index)
     return self
   end
 
