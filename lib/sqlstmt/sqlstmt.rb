@@ -52,7 +52,7 @@ class SqlStmt
     return self
   end
 
-  ###### common operations
+  ###### tables & joins
 
   def table(ref, use_index = nil)
     add_table_ref(ref)
@@ -78,6 +78,8 @@ class SqlStmt
     return @data.table_ids.include?(table_to_find)
   end
 
+  ###### where
+
   def where(*expr)
     @data.wheres.concat(expr)
     return self
@@ -92,6 +94,8 @@ class SqlStmt
     @data.where_behavior = :optional
     return self
   end
+
+  ###### fields & values
 
   def get(*exprs)
     @data.fields.concat(exprs)
@@ -114,6 +118,8 @@ class SqlStmt
   def setq(field, value)
     return set(field, value.to_sql)
   end
+
+  ###### to be sorted
 
   def group_by(expr)
     @data.group_by = expr
@@ -150,8 +156,6 @@ class SqlStmt
   def add_row(row)
     @data.rows << row
   end
-
-  ###### less commonly used methods
 
   def distinct
     @data.distinct = true
