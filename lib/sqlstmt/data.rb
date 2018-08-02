@@ -1,12 +1,19 @@
+require 'set'
+
 module SqlStmtLib
 extend self
 
-SqlTable = Struct.new(:str, :name, :alias, :index)
+SqlTable = Struct.new(:str, :index)
 
 SqlData = Struct.new(
   :stmt_type,
   :tables,
   :joins,
+
+  # set of all table names and aliases
+  # this includes ones added by a join
+  :table_ids,
+
   :wheres,
   :where_behavior,
   :fields,
@@ -29,6 +36,7 @@ SqlData = Struct.new(
 def initialize
   self.tables = []
   self.joins = []
+  self.table_ids = Set.new
   self.wheres = []
   self.where_behavior = :require
   self.fields = []
@@ -46,6 +54,7 @@ def initialize_copy(orig)
   super
   self.tables = orig.tables.dup
   self.joins = orig.joins.dup
+  self.table_ids = orig.table_ids.dup
   self.wheres = orig.wheres.dup
   self.fields = orig.fields.dup
   self.values = orig.values.dup

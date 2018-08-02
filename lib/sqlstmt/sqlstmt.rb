@@ -54,9 +54,9 @@ class SqlStmt
 
   ###### common operations
 
-  def table(str, use_index = nil)
-    tbl_name, tbl_alias = str.split(' ')
-    @data.tables << SqlStmtLib::SqlTable.new(str, tbl_name, tbl_alias, use_index)
+  def table(ref, use_index = nil)
+    add_table_ref(ref)
+    @data.tables << SqlStmtLib::SqlTable.new(ref, use_index)
     return self
   end
 
@@ -68,9 +68,14 @@ class SqlStmt
     return any_join('LEFT JOIN', table, exprs)
   end
 
-  def any_join(kwstr, table, exprs)
-    @data.joins << [kwstr, table, "ON #{exprs.join(' AND ')}"]
+  def any_join(kwstr, ref, exprs)
+    add_table_ref(ref)
+    @data.joins << [kwstr, ref, "ON #{exprs.join(' AND ')}"]
     return self
+  end
+
+  def includes_table?(table_to_find)
+    return @data.table_ids.include?(table_to_find)
   end
 
   def where(*expr)
@@ -173,21 +178,10 @@ class SqlStmt
     return self
   end
 
-  ###### methods to analyze what the statement contains
-  def includes_table?(table_to_find)
-    retval = @data.tables.find { |table| (table.name == table_to_find) || (table.alias == table_to_find) }
-    retval ||= @data.joins.find { |_, table, _| table_names_match?(table, table_to_find) }
-    return retval
-  end
-
 private
-
-
-  def table_names_match?(fullstr, tofind)
-    if tofind.index(' ') || !fullstr.index(' ')
-      return fullstr == tofind
-    end
-    orig_name, _, tblas = fullstr.partition(' ')
-    return (orig_name == tofind) || (tblas == tofind)
+  def add_table_ref(ref)
+    tbl_name, tbl_alias = ref.split(' ')
+    @data.table_ids << tbl_name
+    @data.table_ids << tbl_alias
   end
 end
