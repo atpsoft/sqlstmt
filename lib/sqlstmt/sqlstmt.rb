@@ -14,6 +14,8 @@ require 'sqlstmt/error'
 
 # unless there is something better to return, all methods return self so they can be chained together
 class SqlStmt
+  attr_reader :data
+
   def initialize
     @data = SqlStmtLib::SqlData.new
   end
