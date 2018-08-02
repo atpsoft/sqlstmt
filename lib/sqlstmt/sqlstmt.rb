@@ -24,23 +24,6 @@ class SqlStmt
     @data = @data.dup
   end
 
-  ###### temporary transition methods
-  def fields
-    return @data.fields
-  end
-
-  def tables
-    return @data.tables
-  end
-
-  def joins
-    return @data.joins
-  end
-
-  def wheres
-    return @data.wheres
-  end
-
   ###### pick statement type
 
   def select
