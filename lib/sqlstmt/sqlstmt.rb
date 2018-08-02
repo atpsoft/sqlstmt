@@ -180,8 +180,11 @@ class SqlStmt
 
 private
   def add_table_ref(ref)
-    tbl_name, tbl_alias = ref.split(' ')
-    @data.table_ids << tbl_name
-    @data.table_ids << tbl_alias
+    parts = ref.split(' ')
+    if parts.size == 3
+      parts.delete_at(1)
+    end
+    @data.table_ids << parts[0]
+    @data.table_ids << parts[1]
   end
 end

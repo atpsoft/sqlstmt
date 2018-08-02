@@ -6,6 +6,10 @@ class TestSelect < Minitest::Test
     assert(sqlb.includes_table?('target'))
     assert(sqlb.includes_table?('t'))
     assert(!sqlb.includes_table?('blah'))
+
+    sqlb = SqlStmt.new.select.table('target AS t')
+    assert(sqlb.includes_table?('target'))
+    assert(sqlb.includes_table?('t'))
   end
 
   def test_tables
