@@ -23,7 +23,6 @@ SqlData = Struct.new(
   :limit,
   :having,
   :into_table,
-  :rows,
   :tables_to_delete,
   :distinct,
   :straight_join,
@@ -42,7 +41,6 @@ def initialize
   self.fields = []
   self.values = []
   self.having = []
-  self.rows = []
   self.tables_to_delete = []
   self.ignore = ''
   self.outfile = ''
@@ -59,7 +57,6 @@ def initialize_copy(orig)
   self.fields = orig.fields.dup
   self.values = orig.values.dup
   self.having = orig.having.dup
-  self.rows = orig.rows.dup
 end
 
 end

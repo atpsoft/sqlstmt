@@ -152,12 +152,6 @@ class SqlStmt
     return self
   end
 
-  # used with INSERT VALUES statements only
-  def add_row(row)
-    @data.rows << row
-    return self
-  end
-
   def distinct
     @data.distinct = true
     return self

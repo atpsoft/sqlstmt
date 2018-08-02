@@ -32,12 +32,8 @@ class MysqlBuilder
       start_str += "(#{field_list}) "
     end
 
-    if @data.rows.empty?
-      distinct_str = @data.distinct ? 'DISTINCT ' : ''
-      return "#{start_str}SELECT #{distinct_str}#{value_list}#{build_from_clause}"
-    else
-      return "#{start_str}VALUES (#{value_list})"
-    end
+    distinct_str = @data.distinct ? 'DISTINCT ' : ''
+    return "#{start_str}SELECT #{distinct_str}#{value_list}#{build_from_clause}"
   end
 
   def build_stmt_delete
