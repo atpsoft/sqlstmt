@@ -61,11 +61,16 @@ class SqlStmt
   end
 
   def join(table, *exprs)
-    return add_join('JOIN', table, exprs)
+    return any_join('JOIN', table, exprs)
   end
 
   def left_join(table, *exprs)
-    return add_join('LEFT JOIN', table, exprs)
+    return any_join('LEFT JOIN', table, exprs)
+  end
+
+  def any_join(keyword, table, exprs)
+    @data.joins << [keyword, table, "ON #{exprs.join(' AND ')}"]
+    return self
   end
 
   def where(*expr)
@@ -177,10 +182,6 @@ class SqlStmt
 
 private
 
-  def add_join(keyword, table, exprs)
-    @data.joins << [keyword, table, "ON #{exprs.join(' AND ')}"]
-    return self
-  end
 
   def table_names_match?(fullstr, tofind)
     if tofind.index(' ') || !fullstr.index(' ')
