@@ -16,6 +16,7 @@ class TestSelect < Minitest::Test
 
   def test_minimum_requirements
     assert_raises(SqlStmtError) { SqlStmt.new.select.table('target').to_s }
+    assert_raises(SqlStmtError) { SqlStmt.new.type('select').table('target').to_s }
     assert_raises(SqlStmtError) { SqlStmt.new.select.table('target').no_where.to_s }
     assert_raises(SqlStmtError) { SqlStmt.new.select.table('target').optional_where.to_s }
     assert_equal('SELECT blah FROM target', SqlStmt.new.select.table('target').optional_where.get('blah').to_sql)

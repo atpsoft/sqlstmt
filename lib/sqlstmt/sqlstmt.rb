@@ -27,20 +27,28 @@ class SqlStmt
   ###### pick statement type
 
   def select
-    return set_statement_type('select')
+    return type('select')
   end
 
   def update
-    return set_statement_type('update')
+    return type('update')
   end
 
   def insert
-    return set_statement_type('insert')
+    return type('insert')
   end
 
   def delete(*tables)
-    set_statement_type('delete')
+    type('delete')
     @data.tables_to_delete = tables
+    return self
+  end
+
+  def type(stmt_type)
+    if @data.stmt_type
+      raise "statement type already set to #{@data.stmt_type}"
+    end
+    @data.stmt_type = stmt_type
     return self
   end
 
@@ -169,13 +177,6 @@ class SqlStmt
   end
 
 private
-  def set_statement_type(stmt_type)
-    if @data.stmt_type
-      raise "statement type already set to #{@data.stmt_type}"
-    end
-    @data.stmt_type = stmt_type
-    return self
-  end
 
   def add_join(keyword, table, exprs)
     @data.joins << [keyword, table, "ON #{exprs.join(' AND ')}"]
