@@ -46,7 +46,7 @@ class SqlStmt
 
   def type(stmt_type)
     if @data.stmt_type
-      raise "statement type already set to #{@data.stmt_type}"
+      raise SqlStmtError, "statement type already set to #{@data.stmt_type}"
     end
     @data.stmt_type = stmt_type
     return self
@@ -91,7 +91,7 @@ class SqlStmt
   end
 
   def set(field, value)
-    raise "trying to include field #{field} again" if @data.fields.include?(field)
+    raise SqlStmtError, "trying to include field #{field} again" if @data.fields.include?(field)
     # this is to support the special case of INSERT INTO table SELECT * FROM ...
     # where * specified with no matching insert field list specified
     if field
