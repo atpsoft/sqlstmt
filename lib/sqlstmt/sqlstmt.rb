@@ -68,8 +68,8 @@ class SqlStmt
     return any_join('LEFT JOIN', table, exprs)
   end
 
-  def any_join(keyword, table, exprs)
-    @data.joins << [keyword, table, "ON #{exprs.join(' AND ')}"]
+  def any_join(kwstr, table, exprs)
+    @data.joins << [kwstr, table, "ON #{exprs.join(' AND ')}"]
     return self
   end
 
