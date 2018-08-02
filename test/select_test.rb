@@ -2,6 +2,10 @@ require_relative 'helper'
 
 class TestSelect < Minitest::Test
   def test_includes_table
+    sqlb = SqlStmt.new.select.table('target')
+    assert(sqlb.includes_table?('target'))
+    assert_equal(['target'], sqlb.data.table_ids.to_a)
+
     sqlb = SqlStmt.new.select.table('target t')
     assert(sqlb.includes_table?('target'))
     assert(sqlb.includes_table?('t'))

@@ -184,7 +184,6 @@ private
     if parts.size == 3
       parts.delete_at(1)
     end
-    @data.table_ids << parts[0]
-    @data.table_ids << parts[1]
+    @data.table_ids.merge(parts)
   end
 end
