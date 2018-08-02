@@ -9,40 +9,55 @@ class MysqlChecker
   end
 
   def run
+    check_basics
+    check_where
+    check_statement_type_specific
+  end
+
+  def check_basics
     if !@data.stmt_type
-      raise SqlStmtError, "unable to build sql - must call :select, :update, :insert or :delete to specify statement type"
+      raise SqlStmtError, "must call :select, :update, :insert or :delete"
     end
     if @data.tables.empty?
-      raise SqlStmtError, "unable to build sql - must call :table"
+      raise SqlStmtError, "must call :table"
     end
+  end
 
+  def check_where
     if (@data.where_behavior == :require) && @data.wheres.empty?
-      raise SqlStmtError, "unable to build sql - must call :where, :no_where, or :optional_where"
+      raise SqlStmtError, "must call :where, :no_where, or :optional_where"
     elsif (@data.where_behavior == :exclude) && !@data.wheres.empty?
-      raise SqlStmtError, "unable to build sql - :where and :no_where must not both be called, consider :optional_where instead"
+      raise SqlStmtError, ":where and :no_where must not both be called, consider :optional_where instead"
     end
+  end
 
-    if @data.stmt_type == 'select'
-      raise SqlStmtError, "unable to build sql - must call :get" if @data.fields.empty?
-      raise SqlStmtError, "unable to build sql - must not call :set" if !@data.values.empty?
-    else
-      raise SqlStmtError, "unable to build sql - must not call :get" if @data.called_get
+  def check_statement_type_specific
+    method_name = "check_stmt_#{@data.stmt_type}"
+    send(method_name)
+
+    if @data.stmt_type != 'select'
+      raise SqlStmtError, "must not call :get on #{@data.stmt_type} statement" if @data.called_get
     end
+  end
 
-    if ['update','insert'].include?(@data.stmt_type)
-      raise SqlStmtError, "unable to build sql - must call :set or :setq" if @data.values.empty?
-      raise SqlStmtError, "unable to build sql - must not call :get" if @data.called_get
-    end
+  def check_stmt_select
+    raise SqlStmtError, "must call :get on select statement" if @data.fields.empty?
+    raise SqlStmtError, "must not call :set on select statement" if !@data.values.empty?
+  end
 
-    if @data.stmt_type == 'insert'
-      raise SqlStmtError, "unable to build sql - must call :into" if @data.into_table.nil?
-    end
+  def check_stmt_update
+    raise SqlStmtError, "must call :set on update statement" if @data.values.empty?
+  end
 
-    if @data.stmt_type == 'delete'
-      raise SqlStmtError, "unable to build sql - must not call :get or :set" if !@data.fields.empty?
-      if @data.tables_to_delete.empty? && ((@data.tables.size + @data.joins.size) > 1)
-        raise SqlStmtError, "unable to build sql - must specify tables to delete when including multiple tables"
-      end
+  def check_stmt_insert
+    raise SqlStmtError, "must call :set on insert statement" if @data.values.empty?
+    raise SqlStmtError, "must call :into on insert statement" if @data.into_table.nil?
+  end
+
+  def check_stmt_delete
+    raise SqlStmtError, "must not call :set on delete statement" if !@data.values.empty?
+    if @data.tables_to_delete.empty? && ((@data.tables.size + @data.joins.size) > 1)
+      raise SqlStmtError, "must specify tables to delete when including multiple tables"
     end
   end
 end
