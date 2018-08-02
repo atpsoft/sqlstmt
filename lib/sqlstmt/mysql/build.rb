@@ -24,10 +24,6 @@ class MysqlBuilder
   end
 
   def build_stmt_insert
-    if !@data.fields.empty? && !@data.rows.empty?
-      raise "unable to use INSERT SELECT and INSERT VALUES together, may only call :set or :add_row, but not both"
-    end
-
     keyword = @data.replace ? 'REPLACE' : 'INSERT'
     value_list = @data.values.join(',')
     start_str = "#{keyword} #{@data.ignore}INTO #{@data.into_table} "
@@ -40,7 +36,6 @@ class MysqlBuilder
       distinct_str = @data.distinct ? 'DISTINCT ' : ''
       return "#{start_str}SELECT #{distinct_str}#{value_list}#{build_from_clause}"
     else
-      raise "DISTINCT not supported when inserting values" if @data.distinct
       return "#{start_str}VALUES (#{value_list})"
     end
   end
