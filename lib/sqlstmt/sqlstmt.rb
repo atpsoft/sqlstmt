@@ -54,9 +54,9 @@ class SqlStmt
 
   ###### common operations
 
-  def table(table_str, use_index = nil)
-    parts = table_str.split(' ')
-    table_obj = SqlStmtLib::SqlTable.new(table_str, parts[0], parts[1], use_index)
+  def table(str, use_index = nil)
+    parts = str.split(' ')
+    table_obj = SqlStmtLib::SqlTable.new(str, parts[0], parts[1], use_index)
     @data.tables << table_obj
     return self
   end
