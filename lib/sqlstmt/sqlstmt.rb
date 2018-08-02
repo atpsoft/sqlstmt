@@ -12,7 +12,7 @@ require 'sqlstmt/error'
 # also, looking to the future of supporting other dialects of SQL, I think the same will be true there
 # meaning, we don't the choice of SQL dialect to be allowed at any time
 
-# unless there is something better to return, all methods return self so they can be chained together
+# unless there is something better to return, methods return self so they can be chained together
 class SqlStmt
   attr_reader :data
 
@@ -155,6 +155,7 @@ class SqlStmt
   # used with INSERT VALUES statements only
   def add_row(row)
     @data.rows << row
+    return self
   end
 
   def distinct
