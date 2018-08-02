@@ -53,14 +53,17 @@ class MysqlChecker
     raise SqlStmtError, "must call :set on insert statement" if @data.values.empty?
     raise SqlStmtError, "must call :into on insert statement" if @data.into_table.nil?
 
-    # this means INSERT VALUES
     if !@data.rows.empty?
-      if !@data.fields.empty?
-        raise SqlStmtError, "unable to use INSERT SELECT and INSERT VALUES together, must call either :set or :add_row, but not both"
-      end
-      if @data.distinct
-        raise SqlStmtError, "DISTINCT not supported with INSERT VALUES"
-      end
+      check_stmt_insert_values
+    end
+  end
+
+  def check_stmt_insert_values
+    if !@data.fields.empty?
+      raise SqlStmtError, "unable to use INSERT SELECT and INSERT VALUES together, must call either :set or :add_row, but not both"
+    end
+    if @data.distinct
+      raise SqlStmtError, "DISTINCT not supported with INSERT VALUES"
     end
   end
 
