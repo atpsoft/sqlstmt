@@ -40,26 +40,19 @@ class SqlStmt
   ###### pick statement type
 
   def select
-    ensure_no_statement_type
-    @data.stmt_type = 'select'
-    return self
+    return set_statement_type('select')
   end
 
   def update
-    ensure_no_statement_type
-    @data.stmt_type = 'update'
-    return self
+    return set_statement_type('update')
   end
 
   def insert
-    ensure_no_statement_type
-    @data.stmt_type = 'insert'
-    return self
+    return set_statement_type('insert')
   end
 
   def delete(*tables)
-    ensure_no_statement_type
-    @data.stmt_type = 'delete'
+    set_statement_type('delete')
     @data.tables_to_delete = tables
     return self
   end
@@ -189,10 +182,12 @@ class SqlStmt
   end
 
 private
-  def ensure_no_statement_type
+  def set_statement_type(stmt_type)
     if @data.stmt_type
       raise "statement type already set to #{@data.stmt_type}"
     end
+    @data.stmt_type = stmt_type
+    return self
   end
 
   def add_join(keyword, table, exprs)
