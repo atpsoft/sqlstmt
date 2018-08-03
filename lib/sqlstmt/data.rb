@@ -67,6 +67,7 @@ def initialize_copy(orig)
   self.fields = orig.fields.dup
   self.values = orig.values.dup
   self.having = orig.having.dup
+  self.tables_to_delete = orig.tables_to_delete.dup
 end
 
 end
