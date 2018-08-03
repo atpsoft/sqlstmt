@@ -7,6 +7,11 @@ extend self
 # this may be the wrong approach, but for now at least, it seems the most intuitive/useful option
 SqlTable = Struct.new(:str, :name, :alias, :index)
 
+# kwstr is the keyword string, like 'JOIN' or 'LEFT JOIN'
+# table is a SqlTable object, representing the table being joined to
+# on_expr is the ON expression for the join
+SqlJoin = Struct.new(:kwstr, :table, :on_expr)
+
 SqlData = Struct.new(
   :stmt_type,
   :tables,

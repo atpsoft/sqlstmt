@@ -69,7 +69,7 @@ class SqlStmt
 
   def any_join(kwstr, ref, exprs)
     tbl = include_table(ref)
-    @data.joins << [kwstr, tbl, "ON #{exprs.join(' AND ')}"]
+    @data.joins << SqlStmtLib::SqlJoin.new(kwstr, tbl, "ON #{exprs.join(' AND ')}")
     return self
   end
 
