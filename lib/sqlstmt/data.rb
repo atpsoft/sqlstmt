@@ -15,6 +15,8 @@ SqlTable = Struct.new(:str, :name, :alias, :index)
 # on_expr is the ON expression for the join
 SqlJoin = Struct.new(:kwstr, :table, :on_expr)
 
+DATA_ARRAY_FIELDS = %i(tables joins wheres fields values having tables_to_delete).freeze
+
 SqlData = Struct.new(
   :stmt_type,
   :tables,
@@ -43,31 +45,23 @@ SqlData = Struct.new(
   :called_get,
 ) do
 def initialize
-  self.tables = []
-  self.joins = []
   self.table_ids = Set.new
-  self.wheres = []
   self.where_behavior = :require
-  self.fields = []
-  self.values = []
-  self.having = []
-  self.tables_to_delete = []
   self.ignore = ''
   self.outfile = ''
   self.called_get = false
+  DATA_ARRAY_FIELDS.each do |field|
+    self[field] = []
+  end
 end
 
 def initialize_copy(orig)
   # without this call to super, any field that we aren't dup'ing here won't be copied
   super
-  self.tables = orig.tables.dup
-  self.joins = orig.joins.dup
+  DATA_ARRAY_FIELDS.each do |field|
+    self[field] = self[field].dup
+  end
   self.table_ids = orig.table_ids.dup
-  self.wheres = orig.wheres.dup
-  self.fields = orig.fields.dup
-  self.values = orig.values.dup
-  self.having = orig.having.dup
-  self.tables_to_delete = orig.tables_to_delete.dup
 end
 
 end
