@@ -36,26 +36,26 @@ class MysqlChecker
     send(method_name)
 
     if @data.stmt_type != 'select'
-      raise SqlStmtError, "must not call :get on #{@data.stmt_type} statement" if @data.called_get
+      raise SqlStmtError, "must not call :get on #{@data.stmt_type} statement" if !@data.get_fields.empty?
     end
   end
 
   def check_stmt_select
-    raise SqlStmtError, "must call :get on select statement" if @data.fields.empty?
-    raise SqlStmtError, "must not call :set on select statement" if !@data.values.empty?
+    raise SqlStmtError, "must call :get on select statement" if @data.get_fields.empty?
+    raise SqlStmtError, "must not call :set on select statement" if !@data.set_values.empty?
   end
 
   def check_stmt_update
-    raise SqlStmtError, "must call :set on update statement" if @data.values.empty?
+    raise SqlStmtError, "must call :set on update statement" if @data.set_values.empty?
   end
 
   def check_stmt_insert
-    raise SqlStmtError, "must call :set on insert statement" if @data.values.empty?
+    raise SqlStmtError, "must call :set on insert statement" if @data.set_values.empty?
     raise SqlStmtError, "must call :into on insert statement" if @data.into_table.nil?
   end
 
   def check_stmt_delete
-    raise SqlStmtError, "must not call :set on delete statement" if !@data.values.empty?
+    raise SqlStmtError, "must not call :set on delete statement" if !@data.set_values.empty?
     if @data.tables_to_delete.empty? && ((@data.tables.size + @data.joins.size) > 1)
       raise SqlStmtError, "must specify tables to delete when including multiple tables"
     end

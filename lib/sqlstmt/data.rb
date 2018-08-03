@@ -15,7 +15,7 @@ SqlTable = Struct.new(:str, :name, :alias, :index)
 # on_expr is the ON expression for the join
 SqlJoin = Struct.new(:kwstr, :table, :on_expr)
 
-DATA_ARRAY_FIELDS = %i(tables joins wheres fields values having tables_to_delete).freeze
+DATA_ARRAY_FIELDS = %i(tables joins wheres get_fields set_fields set_values having tables_to_delete).freeze
 
 SqlData = Struct.new(
   :stmt_type,
@@ -28,8 +28,9 @@ SqlData = Struct.new(
 
   :wheres,
   :where_behavior,
-  :fields,
-  :values,
+  :get_fields,
+  :set_fields,
+  :set_values,
   :group_by,
   :order_by,
   :limit,
@@ -42,14 +43,12 @@ SqlData = Struct.new(
   :ignore,
   :outfile,
   :with_rollup,
-  :called_get,
 ) do
 def initialize
   self.table_ids = Set.new
   self.where_behavior = :require
   self.ignore = ''
   self.outfile = ''
-  self.called_get = false
   DATA_ARRAY_FIELDS.each do |field|
     self[field] = []
   end

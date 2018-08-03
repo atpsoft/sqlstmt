@@ -14,7 +14,7 @@ class MysqlBuilder
   def build_stmt_select
     straight_join_str = @data.straight_join ? 'STRAIGHT_JOIN ' : ''
     distinct_str = @data.distinct ? 'DISTINCT ' : ''
-    select_str = @data.fields.join(',')
+    select_str = @data.get_fields.join(',')
     return "SELECT #{straight_join_str}#{distinct_str}#{select_str}#{build_from_clause}#{@data.outfile}"
   end
 
@@ -25,10 +25,10 @@ class MysqlBuilder
 
   def build_stmt_insert
     keyword = @data.replace ? 'REPLACE' : 'INSERT'
-    value_list = @data.values.join(',')
+    value_list = @data.set_values.join(',')
     start_str = "#{keyword} #{@data.ignore}INTO #{@data.into_table} "
-    if !@data.fields.empty?
-      field_list = @data.fields.join(',')
+    if !@data.set_fields.empty?
+      field_list = @data.set_fields.join(',')
       start_str += "(#{field_list}) "
     end
 
@@ -59,8 +59,8 @@ class MysqlBuilder
 
   def build_set_clause
     set_exprs = []
-    @data.fields.each_with_index do |field, index|
-      set_exprs << "#{field} = #{@data.values[index]}"
+    @data.set_fields.each_with_index do |field, index|
+      set_exprs << "#{field} = #{@data.set_values[index]}"
     end
     return set_exprs.join(', ')
   end

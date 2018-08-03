@@ -97,8 +97,7 @@ class SqlStmt
   ###### fields & values
 
   def get(*exprs)
-    @data.fields.concat(exprs)
-    @data.called_get = true
+    @data.get_fields.concat(exprs)
     return self
   end
 
@@ -106,15 +105,15 @@ class SqlStmt
   # this is only for the special case of INSERT INTO table SELECT b.* FROM blah b WHERE ...
   # where there are no specific fields listed
   def set(field, value)
-    if @data.fields.include?(field)
+    if @data.set_fields.include?(field)
       raise SqlStmtError, "trying to set field #{field} again"
     end
 
     if field
-      @data.fields << field
+      @data.set_fields << field
     end
     value = value.is_a?(String) ? value : value.to_sql
-    @data.values << value
+    @data.set_values << value
     return self
   end
 
