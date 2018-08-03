@@ -102,13 +102,14 @@ class SqlStmt
     return self
   end
 
+  # nil can be passed in for the field, in which case it won't be added
+  # this is only for the special case of INSERT INTO table SELECT b.* FROM blah b WHERE ...
+  # where there are no specific fields listed
   def set(field, value)
     if @data.fields.include?(field)
       raise SqlStmtError, "trying to set field #{field} again"
     end
 
-    # this is to support the special case of INSERT INTO table SELECT * FROM ...
-    # where * specified with no matching insert field list specified
     if field
       @data.fields << field
     end
