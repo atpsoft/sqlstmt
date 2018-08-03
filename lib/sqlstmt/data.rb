@@ -3,8 +3,11 @@ require 'set'
 module SqlStmtLib
 extend self
 
-# in the case where only one identifier is specified, :name and :alias are both set to that value
-# this may be the wrong approach, but for now at least, it seems the most intuitive/useful option
+# :str is the full original string specifying the table, like 'frog f' or 'frog AS f' or 'frog'
+# :name is the full name of the table
+# :alias is the alias specified for the table, or if none is specified, it's the same as :name
+#   this may be the wrong approach, but for now at least, it seems the most intuitive/useful option
+# :index is used to specify a "USE INDEX" clause
 SqlTable = Struct.new(:str, :name, :alias, :index)
 
 # kwstr is the keyword string, like 'JOIN' or 'LEFT JOIN'
