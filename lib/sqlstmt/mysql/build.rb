@@ -80,11 +80,19 @@ class MysqlBuilder
     return value ? " #{keywords} #{value}" : ''
   end
 
+  def join_to_str(join_ary)
+    kwstr, tbl, on_expr = join_ary
+    return [kwstr, tbl.str, on_expr].join(' ')
+  end
+
   def build_join_clause
     if @data.joins.empty?
       return ''
     else
-      return ' ' + @data.joins.map {|ary| ary.join(' ')}.uniq.join(' ')
+      # we call uniq here to be tolerant of a table being joined to multiple times in an identical fashion
+      # where the intention is not actually to include the table multiple times
+      # but I'm thinking we may want to reconsider, or at least warn when this happens so the source bug can be fixed
+      return ' ' + @data.joins.map {|ary| join_to_str(ary)}.uniq.join(' ')
     end
   end
 

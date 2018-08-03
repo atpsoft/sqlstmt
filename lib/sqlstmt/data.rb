@@ -3,7 +3,9 @@ require 'set'
 module SqlStmtLib
 extend self
 
-SqlTable = Struct.new(:str, :index)
+# in the case where only one identifier is specified, :name and :alias are both set to that value
+# this may be the wrong approach, but for now at least, it seems the most intuitive/useful option
+SqlTable = Struct.new(:str, :name, :alias, :index)
 
 SqlData = Struct.new(
   :stmt_type,

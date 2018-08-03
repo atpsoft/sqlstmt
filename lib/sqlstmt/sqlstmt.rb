@@ -55,8 +55,7 @@ class SqlStmt
   ###### tables & joins
 
   def table(ref, use_index = nil)
-    add_table_ref(ref)
-    @data.tables << SqlStmtLib::SqlTable.new(ref, use_index)
+    @data.tables << include_table(ref, use_index)
     return self
   end
 
@@ -69,8 +68,8 @@ class SqlStmt
   end
 
   def any_join(kwstr, ref, exprs)
-    add_table_ref(ref)
-    @data.joins << [kwstr, ref, "ON #{exprs.join(' AND ')}"]
+    tbl = include_table(ref)
+    @data.joins << [kwstr, tbl, "ON #{exprs.join(' AND ')}"]
     return self
   end
 
@@ -178,11 +177,19 @@ class SqlStmt
   end
 
 private
-  def add_table_ref(ref)
+  # this is used for method calls to :table and :any_join
+  def include_table(ref, use_index = nil)
     parts = ref.split(' ')
     if parts.size == 3
       parts.delete_at(1)
     end
     @data.table_ids.merge(parts)
+
+    if parts.size == 2
+      tbl_name, tbl_alias = parts
+    else
+      tbl_name = tbl_alias = parts.first
+    end
+    return SqlStmtLib::SqlTable.new(ref, tbl_name, tbl_alias, use_index)
   end
 end
