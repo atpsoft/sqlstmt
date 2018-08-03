@@ -103,7 +103,10 @@ class SqlStmt
   end
 
   def set(field, value)
-    raise SqlStmtError, "trying to include field #{field} again" if @data.fields.include?(field)
+    if @data.fields.include?(field)
+      raise SqlStmtError, "trying to set field #{field} again"
+    end
+
     # this is to support the special case of INSERT INTO table SELECT * FROM ...
     # where * specified with no matching insert field list specified
     if field
