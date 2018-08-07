@@ -121,61 +121,73 @@ class SqlStmt
     return set(field, value.to_sql)
   end
 
-  ###### to be sorted
+  ###### not sure how to organize the rest of these yet
+  ###### for now they are sorted roughly by my perception of how general purpose they are
+  ###### the ones I suspect are dialect specific are at the bottom
 
-  def group_by(expr)
-    @data.group_by = expr
-    return self
-  end
-
-  def order_by(expr)
-    @data.order_by = expr
-    return self
-  end
-
+  # select / delete / update
   def limit(clause)
     @data.limit = clause
     return self
   end
 
+  # select / update / delete
+  def order_by(expr)
+    @data.order_by = expr
+    return self
+  end
+
+  # select
+  def group_by(expr)
+    @data.group_by = expr
+    return self
+  end
+
+  # select
   def having(*expr)
     @data.having.concat(expr)
     return self
   end
 
-  def with_rollup
-    @data.with_rollup = true
-    return self
-  end
-
-  # used with INSERT statements only
+  # insert
   def into(into_table)
     @data.into_table = into_table
     return self
   end
 
+  # select
+  def with_rollup
+    @data.with_rollup = true
+    return self
+  end
+
+  # select
   def distinct
     @data.distinct = true
     return self
   end
 
+  # select
+  def outfile(str)
+    @data.outfile = " INTO OUTFILE #{str}"
+    return self
+  end
+
+  # select
   def straight_join
     @data.straight_join = true
     return self
   end
 
+  # insert
   def replace
     @data.replace = true
     return self
   end
 
+  # insert / update / delete
   def ignore
     @data.ignore = 'IGNORE '
-    return self
-  end
-
-  def outfile(str)
-    @data.outfile = " INTO OUTFILE #{str}"
     return self
   end
 
