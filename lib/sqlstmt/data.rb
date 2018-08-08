@@ -48,7 +48,6 @@ def initialize
   self.table_ids = Set.new
   self.where_behavior = :require
   self.ignore = ''
-  self.outfile = ''
   DATA_ARRAY_FIELDS.each do |field|
     self[field] = []
   end

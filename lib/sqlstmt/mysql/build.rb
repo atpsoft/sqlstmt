@@ -15,7 +15,8 @@ class MysqlBuilder
     straight_join_str = @data.straight_join ? 'STRAIGHT_JOIN ' : ''
     distinct_str = @data.distinct ? 'DISTINCT ' : ''
     select_str = @data.get_fields.join(',')
-    return "SELECT #{straight_join_str}#{distinct_str}#{select_str}#{build_from_clause}#{@data.outfile}"
+    outfile_str = @data.outfile ? " INTO OUTFILE #{@data.outfile}" : ''
+    return "SELECT #{straight_join_str}#{distinct_str}#{select_str}#{build_from_clause}#{outfile_str}"
   end
 
   def build_stmt_update

@@ -169,7 +169,7 @@ class SqlStmt
 
   # select
   def outfile(str)
-    @data.outfile = " INTO OUTFILE #{str}"
+    @data.outfile = str
     return self
   end
 
