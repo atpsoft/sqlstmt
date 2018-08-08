@@ -10,7 +10,7 @@ require 'sqlstmt/error'
 # for example, we might build a statement and add a where clause to it
 # and some step later on would determine the statement type
 # also, looking to the future of supporting other dialects of SQL, I think the same will be true there
-# meaning, we don't the choice of SQL dialect to be allowed at any time
+# meaning, we allow the choice of SQL dialect to be made at any time
 
 # unless there is something better to return, methods return self so they can be chained together
 class SqlStmt
