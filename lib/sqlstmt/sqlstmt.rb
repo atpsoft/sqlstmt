@@ -79,11 +79,6 @@ class SqlStmt
 
   ###### where
 
-  def where(*expr)
-    @data.wheres.concat(expr)
-    return self
-  end
-
   def no_where
     @data.where_behavior = :exclude
     return self
@@ -95,11 +90,6 @@ class SqlStmt
   end
 
   ###### fields & values
-
-  def get(*exprs)
-    @data.get_fields.concat(exprs)
-    return self
-  end
 
   # nil can be passed in for the field, in which case it won't be added
   # this is only for the special case of INSERT INTO table SELECT b.* FROM blah b WHERE ...
@@ -121,15 +111,7 @@ class SqlStmt
     return set(field, value.to_sql)
   end
 
-  ###### not sure how to organize the rest of these yet
-  ###### for now they are sorted roughly by my perception of how general purpose they are
-  ###### the ones I suspect are dialect specific are at the bottom
-
-  # select
-  def having(*expr)
-    @data.having.concat(expr)
-    return self
-  end
+  ###### these are simple wrappers around various keywords
 
   SqlStmtLib::FLAG_KEYWORDS.each do |keyword|
     define_method(keyword) do
@@ -141,6 +123,13 @@ class SqlStmt
   SqlStmtLib::SINGLE_VALUE_KEYWORDS.each do |keyword|
     define_method(keyword) do |value|
       @data[keyword] = value
+      return self
+    end
+  end
+
+  SqlStmtLib::MULTI_VALUE_KEYWORDS.each do |keyword|
+    define_method(keyword) do |*values|
+      @data["#{keyword}s"].concat(values)
       return self
     end
   end

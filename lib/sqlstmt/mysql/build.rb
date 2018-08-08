@@ -14,7 +14,7 @@ class MysqlBuilder
   def build_stmt_select
     straight_join_str = @data.straight_join ? 'STRAIGHT_JOIN ' : ''
     distinct_str = @data.distinct ? 'DISTINCT ' : ''
-    select_str = @data.get_fields.join(',')
+    select_str = @data.gets.join(',')
     outfile_str = @data.outfile ? " INTO OUTFILE #{@data.outfile}" : ''
     return "SELECT #{straight_join_str}#{distinct_str}#{select_str}#{build_from_clause}#{outfile_str}"
   end
@@ -55,7 +55,7 @@ class MysqlBuilder
     end
     order_clause = simple_clause('ORDER BY', @data.order_by)
     limit_clause = simple_clause('LIMIT', @data.limit)
-    having_clause = @data.having.empty? ? '' : " HAVING #{@data.having.join(' AND ')}"
+    having_clause = @data.havings.empty? ? '' : " HAVING #{@data.havings.join(' AND ')}"
     return " FROM #{build_table_list}#{join_clause}#{build_where_clause}#{group_clause}#{having_clause}#{order_clause}#{limit_clause}"
   end
 

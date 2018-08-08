@@ -36,12 +36,12 @@ class MysqlChecker
     send(method_name)
 
     if @data.stmt_type != 'select'
-      raise SqlStmtError, "must not call :get on #{@data.stmt_type} statement" if !@data.get_fields.empty?
+      raise SqlStmtError, "must not call :get on #{@data.stmt_type} statement" if !@data.gets.empty?
     end
   end
 
   def check_stmt_select
-    raise SqlStmtError, "must call :get on select statement" if @data.get_fields.empty?
+    raise SqlStmtError, "must call :get on select statement" if @data.gets.empty?
     raise SqlStmtError, "must not call :set on select statement" if !@data.set_values.empty?
   end
 

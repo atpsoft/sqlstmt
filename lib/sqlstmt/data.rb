@@ -5,6 +5,7 @@ extend self
 
 FLAG_KEYWORDS = %i(distinct ignore replace straight_join with_rollup).freeze
 SINGLE_VALUE_KEYWORDS = %i(group_by into limit offset order_by outfile).freeze
+MULTI_VALUE_KEYWORDS = %i(get having where).freeze
 
 # :str is the full original string specifying the table, like 'frog f' or 'frog AS f' or 'frog'
 # :name is the full name of the table
@@ -20,7 +21,7 @@ SqlJoin = Struct.new(:kwstr, :table, :on_expr)
 
 # :table_ids is a set of all table names and aliases, including ones added by a join
 SPECIAL_DATA_FIELDS = %i(stmt_type table_ids where_behavior).freeze
-ARRAY_DATA_FIELDS = %i(tables joins wheres get_fields set_fields set_values having tables_to_delete).freeze
+ARRAY_DATA_FIELDS = MULTI_VALUE_KEYWORDS.map {|keyword| "#{keyword}s".to_sym} + %i(tables joins set_fields set_values tables_to_delete).freeze
 
 # calling uniq on this in case some fields end up in multiple categories
 ALL_DATA_FIELDS = (FLAG_KEYWORDS + SINGLE_VALUE_KEYWORDS + ARRAY_DATA_FIELDS + SPECIAL_DATA_FIELDS).uniq
