@@ -28,7 +28,7 @@ class MysqlBuilder
     keyword = @data.replace ? 'REPLACE' : 'INSERT'
     value_list = @data.set_values.join(',')
     ignore_str = @data.ignore ? 'IGNORE ' : ''
-    start_str = "#{keyword} #{ignore_str}INTO #{@data.into_table} "
+    start_str = "#{keyword} #{ignore_str}INTO #{@data.into} "
     if !@data.set_fields.empty?
       field_list = @data.set_fields.join(',')
       start_str += "(#{field_list}) "

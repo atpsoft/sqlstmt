@@ -125,45 +125,22 @@ class SqlStmt
   ###### for now they are sorted roughly by my perception of how general purpose they are
   ###### the ones I suspect are dialect specific are at the bottom
 
-  # select / delete / update
-  def limit(clause)
-    @data.limit = clause
-    return self
-  end
-
-  # select / update / delete
-  def order_by(expr)
-    @data.order_by = expr
-    return self
-  end
-
-  # select
-  def group_by(expr)
-    @data.group_by = expr
-    return self
-  end
-
   # select
   def having(*expr)
     @data.having.concat(expr)
     return self
   end
 
-  # insert
-  def into(into_table)
-    @data.into_table = into_table
-    return self
-  end
-
-  # select
-  def outfile(str)
-    @data.outfile = str
-    return self
-  end
-
   SqlStmtLib::FLAG_KEYWORDS.each do |keyword|
     define_method(keyword) do
       @data[keyword] = true
+      return self
+    end
+  end
+
+  SqlStmtLib::SINGLE_VALUE_KEYWORDS.each do |keyword|
+    define_method(keyword) do |value|
+      @data[keyword] = value
       return self
     end
   end

@@ -51,7 +51,7 @@ class MysqlChecker
 
   def check_stmt_insert
     raise SqlStmtError, "must call :set on insert statement" if @data.set_values.empty?
-    raise SqlStmtError, "must call :into on insert statement" if @data.into_table.nil?
+    raise SqlStmtError, "must call :into on insert statement" if @data.into.nil?
   end
 
   def check_stmt_delete
