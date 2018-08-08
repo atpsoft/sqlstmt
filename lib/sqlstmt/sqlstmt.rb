@@ -187,7 +187,7 @@ class SqlStmt
 
   # insert / update / delete
   def ignore
-    @data.ignore = 'IGNORE '
+    @data.ignore = true
     return self
   end
 

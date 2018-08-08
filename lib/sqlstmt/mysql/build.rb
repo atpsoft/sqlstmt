@@ -27,7 +27,8 @@ class MysqlBuilder
   def build_stmt_insert
     keyword = @data.replace ? 'REPLACE' : 'INSERT'
     value_list = @data.set_values.join(',')
-    start_str = "#{keyword} #{@data.ignore}INTO #{@data.into_table} "
+    ignore_str = @data.ignore ? 'IGNORE ' : ''
+    start_str = "#{keyword} #{ignore_str}INTO #{@data.into_table} "
     if !@data.set_fields.empty?
       field_list = @data.set_fields.join(',')
       start_str += "(#{field_list}) "

@@ -47,7 +47,6 @@ SqlData = Struct.new(
 def initialize
   self.table_ids = Set.new
   self.where_behavior = :require
-  self.ignore = ''
   DATA_ARRAY_FIELDS.each do |field|
     self[field] = []
   end
