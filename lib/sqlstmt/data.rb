@@ -3,6 +3,8 @@ require 'set'
 module SqlStmtLib
 extend self
 
+FLAG_KEYWORDS = %i(distinct ignore replace straight_join with_rollup).freeze
+
 # :str is the full original string specifying the table, like 'frog f' or 'frog AS f' or 'frog'
 # :name is the full name of the table
 # :alias is the alias specified for the table, or if none is specified, it's the same as :name

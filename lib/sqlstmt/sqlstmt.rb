@@ -156,39 +156,16 @@ class SqlStmt
   end
 
   # select
-  def with_rollup
-    @data.with_rollup = true
-    return self
-  end
-
-  # select
-  def distinct
-    @data.distinct = true
-    return self
-  end
-
-  # select
   def outfile(str)
     @data.outfile = str
     return self
   end
 
-  # select
-  def straight_join
-    @data.straight_join = true
-    return self
-  end
-
-  # insert
-  def replace
-    @data.replace = true
-    return self
-  end
-
-  # insert / update / delete
-  def ignore
-    @data.ignore = true
-    return self
+  SqlStmtLib::FLAG_KEYWORDS.each do |keyword|
+    define_method(keyword) do
+      @data[keyword] = true
+      return self
+    end
   end
 
 private
