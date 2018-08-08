@@ -18,39 +18,18 @@ SqlTable = Struct.new(:str, :name, :alias, :index)
 # on_expr is the ON expression for the join
 SqlJoin = Struct.new(:kwstr, :table, :on_expr)
 
-DATA_ARRAY_FIELDS = %i(tables joins wheres get_fields set_fields set_values having tables_to_delete).freeze
+# :table_ids is a set of all table names and aliases, including ones added by a join
+SPECIAL_DATA_FIELDS = %i(stmt_type table_ids where_behavior).freeze
+ARRAY_DATA_FIELDS = %i(tables joins wheres get_fields set_fields set_values having tables_to_delete).freeze
 
-SqlData = Struct.new(
-  :stmt_type,
-  :tables,
-  :joins,
+# calling uniq on this in case some fields end up in multiple categories
+ALL_DATA_FIELDS = (FLAG_KEYWORDS + SINGLE_VALUE_KEYWORDS + ARRAY_DATA_FIELDS + SPECIAL_DATA_FIELDS).uniq
 
-  # set of all table names and aliases
-  # this includes ones added by a join
-  :table_ids,
-
-  :wheres,
-  :where_behavior,
-  :get_fields,
-  :set_fields,
-  :set_values,
-  :group_by,
-  :order_by,
-  :limit,
-  :having,
-  :into,
-  :tables_to_delete,
-  :distinct,
-  :straight_join,
-  :replace,
-  :ignore,
-  :outfile,
-  :with_rollup,
-) do
+SqlData = Struct.new(*ALL_DATA_FIELDS) do
 def initialize
   self.table_ids = Set.new
   self.where_behavior = :require
-  DATA_ARRAY_FIELDS.each do |field|
+  ARRAY_DATA_FIELDS.each do |field|
     self[field] = []
   end
 end
@@ -58,7 +37,7 @@ end
 def initialize_copy(orig)
   # without this call to super, any field that we aren't dup'ing here won't be copied
   super
-  DATA_ARRAY_FIELDS.each do |field|
+  ARRAY_DATA_FIELDS.each do |field|
     self[field] = self[field].dup
   end
   self.table_ids = orig.table_ids.dup
