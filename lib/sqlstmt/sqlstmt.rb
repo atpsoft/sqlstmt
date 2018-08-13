@@ -21,6 +21,8 @@ class SqlStmt
   end
 
   def initialize_copy(_orig)
+    # I don't really know why this is necessary, but it seems to be
+    super
     @data = @data.dup
   end
 
