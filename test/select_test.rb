@@ -52,6 +52,7 @@ class TestSelect < Minitest::Test
     sqlb = SqlStmt.new.select.table('source s').get('frog').no_where
     4.times { sqlb.join('other o', 's.blah_id = o.blah_id') }
     assert_equal('SELECT frog FROM source s JOIN other o ON s.blah_id = o.blah_id', sqlb.to_s)
+    assert_equal('other o', sqlb.data.joins.first.table.str)
   end
 
   def test_join_with_multiple_conditions
