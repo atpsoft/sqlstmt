@@ -22,15 +22,8 @@ class MysqlBuilder
   end
 
   def build_stmt_select
-    parts = ['SELECT']
-    if @data.straight_join
-      parts << 'STRAIGHT_JOIN'
-    end
-    if @data.distinct
-      parts << 'DISTINCT'
-    end
-    parts << @data.gets.join(',')
-    parts << build_from_clause
+    parts = []
+    parts << shared_select(@data.gets)
     if @data.outfile
       parts << "INTO OUTFILE #{@data.outfile}"
     end
@@ -65,12 +58,7 @@ class MysqlBuilder
       field_list = @data.set_fields.join(',')
       parts << "(#{field_list})"
     end
-    parts << 'SELECT'
-    if @data.distinct
-      parts << 'DISTINCT'
-    end
-    parts << @data.set_values.join(',')
-    parts << build_from_clause
+    parts << shared_select(@data.set_values)
     return combine_parts(parts)
   end
 
@@ -79,6 +67,19 @@ class MysqlBuilder
     if !@data.tables_to_delete.empty?
       parts << @data.tables_to_delete.join(',')
     end
+    parts << build_from_clause
+    return combine_parts(parts)
+  end
+
+  def shared_select(fields)
+    parts = ['SELECT']
+    if @data.straight_join
+      parts << 'STRAIGHT_JOIN'
+    end
+    if @data.distinct
+      parts << 'DISTINCT'
+    end
+    parts << fields.join(',')
     parts << build_from_clause
     return combine_parts(parts)
   end
