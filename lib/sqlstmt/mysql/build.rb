@@ -11,52 +11,96 @@ class MysqlBuilder
     return send(method_name)
   end
 
+  def combine_parts(parts)
+    parts.each do |str|
+      str.strip!
+    end
+    parts.reject! do |str|
+      str.nil? || str.empty?
+    end
+    return parts.join(' ')
+  end
+
   def build_stmt_select
-    straight_join_str = @data.straight_join ? 'STRAIGHT_JOIN ' : ''
-    distinct_str = @data.distinct ? 'DISTINCT ' : ''
-    select_str = @data.gets.join(',')
-    outfile_str = @data.outfile ? " INTO OUTFILE #{@data.outfile}" : ''
-    return "SELECT #{straight_join_str}#{distinct_str}#{select_str}#{build_from_clause}#{outfile_str}"
+    parts = ['SELECT']
+    if @data.straight_join
+      parts << 'STRAIGHT_JOIN'
+    end
+    if @data.distinct
+      parts << 'DISTINCT'
+    end
+    parts << @data.gets.join(',')
+    parts << build_from_clause
+    if @data.outfile
+      parts << "INTO OUTFILE #{@data.outfile}"
+    end
+    return combine_parts(parts)
   end
 
   def build_stmt_update
-    limit_clause = simple_clause('LIMIT', @data.limit)
-    return "UPDATE #{build_table_list}#{build_join_clause} SET #{build_set_clause}#{build_where_clause}#{limit_clause}"
+    parts = [
+      'UPDATE',
+      build_table_list,
+      build_join_clause,
+      'SET',
+      build_set_clause,
+      build_where_clause,
+      simple_clause('LIMIT', @data.limit),
+    ]
+    return combine_parts(parts)
   end
 
   def build_stmt_insert
-    keyword = @data.replace ? 'REPLACE' : 'INSERT'
-    value_list = @data.set_values.join(',')
-    ignore_str = @data.ignore ? 'IGNORE ' : ''
-    start_str = "#{keyword} #{ignore_str}INTO #{@data.into} "
+    parts = []
+    if @data.replace
+      parts << 'REPLACE'
+    else
+      parts << 'INSERT'
+    end
+    if @data.ignore
+      parts << 'IGNORE'
+    end
+    parts << "INTO #{@data.into}"
     if !@data.set_fields.empty?
       field_list = @data.set_fields.join(',')
-      start_str += "(#{field_list}) "
+      parts << "(#{field_list})"
     end
-
-    distinct_str = @data.distinct ? 'DISTINCT ' : ''
-    return "#{start_str}SELECT #{distinct_str}#{value_list}#{build_from_clause}"
+    parts << 'SELECT'
+    if @data.distinct
+      parts << 'DISTINCT'
+    end
+    parts << @data.set_values.join(',')
+    parts << build_from_clause
+    return combine_parts(parts)
   end
 
   def build_stmt_delete
-    if @data.tables_to_delete.empty?
-      table_clause = ''
-    else
-      table_clause = ' ' + @data.tables_to_delete.join(',')
+    parts = ['DELETE']
+    if !@data.tables_to_delete.empty?
+      parts << @data.tables_to_delete.join(',')
     end
-    return "DELETE#{table_clause}#{build_from_clause}"
+    parts << build_from_clause
+    return combine_parts(parts)
   end
 
   def build_from_clause
-    join_clause = build_join_clause
+    parts = ['FROM']
+    parts << build_table_list
+    parts << build_join_clause
+    parts << build_where_clause
+
     group_clause = simple_clause('GROUP BY', @data.group_by)
     if @data.with_rollup
       group_clause += ' WITH ROLLUP'
     end
-    order_clause = simple_clause('ORDER BY', @data.order_by)
-    limit_clause = simple_clause('LIMIT', @data.limit)
+    parts << group_clause
+
     having_clause = @data.havings.empty? ? '' : " HAVING #{@data.havings.join(' AND ')}"
-    return " FROM #{build_table_list}#{join_clause}#{build_where_clause}#{group_clause}#{having_clause}#{order_clause}#{limit_clause}"
+    parts << having_clause
+
+    parts << simple_clause('ORDER BY', @data.order_by)
+    parts << simple_clause('LIMIT', @data.limit)
+    return combine_parts(parts)
   end
 
   def build_set_clause
@@ -87,14 +131,7 @@ class MysqlBuilder
   end
 
   def build_join_clause
-    if @data.joins.empty?
-      return ''
-    else
-      # we call uniq here to be tolerant of a table being joined to multiple times in an identical fashion
-      # where the intention is not actually to include the table multiple times
-      # but I'm thinking we may want to reconsider, or at least warn when this happens so the source bug can be fixed
-      return ' ' + @data.joins.map {|join| join_to_str(join)}.uniq.join(' ')
-    end
+    return ' ' + @data.joins.map {|join| join_to_str(join)}.uniq.join(' ')
   end
 
   def build_where_clause
