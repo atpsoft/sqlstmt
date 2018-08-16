@@ -88,16 +88,13 @@ class MysqlBuilder
     parts << build_table_list
     parts << build_join_clause
     parts << build_where_clause
-
-    group_clause = simple_clause('GROUP BY', @data.group_by)
+    parts << simple_clause('GROUP BY', @data.group_by)
     if @data.with_rollup
-      group_clause += ' WITH ROLLUP'
+      parts << 'WITH ROLLUP'
     end
-    parts << group_clause
-
-    having_clause = @data.havings.empty? ? '' : " HAVING #{@data.havings.join(' AND ')}"
-    parts << having_clause
-
+    if !@data.havings.empty?
+      parts << "HAVING #{@data.havings.join(' AND ')}"
+    end
     parts << simple_clause('ORDER BY', @data.order_by)
     parts << simple_clause('LIMIT', @data.limit)
     return combine_parts(parts)
