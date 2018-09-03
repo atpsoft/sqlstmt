@@ -47,7 +47,7 @@ class SqlStmt
   end
 
   def type(stmt_type)
-    if @data.stmt_type
+    if @data.stmt_type && @data.stmt_type != stmt_type
       raise SqlStmtError, "statement type already set to #{@data.stmt_type}"
     end
     @data.stmt_type = stmt_type
