@@ -79,13 +79,24 @@ class SqlStmt
     return @data.table_ids.include?(table_to_find)
   end
 
-  ###### where
+  ###### where - because the lack of a where clause can be so impactful,
+  ###### the default behavior is to require one, but this behavior can be customized using the 3 methods below
+  ###### note that each of these override the other calls, so whichever is one called last will take effect
 
+  # if no where clauses have been added, the statement will fail to build
+  # this is the default value, but in case it got changed, we can reset it back
+  def require_where
+    @data.where_behavior = :require
+    return self
+  end
+
+  # if any where clauses have been added, the statement will fail to build
   def no_where
     @data.where_behavior = :exclude
     return self
   end
 
+  # this disables a where clause requirement
   def optional_where
     @data.where_behavior = :optional
     return self
