@@ -35,12 +35,17 @@ class TestSelect < Minitest::Test
   end
 
   def test_simple_with_small_variations
-    tmpl = SqlStmt.new.select().table('target t').get('blah').no_where()
+    tmpl = SqlStmt.new
+    tmpl.select().table('target t').get('blah').no_where()
     assert_equal(['target', 't'], tmpl.data.table_ids.to_a())
 
     sqlt = tmpl.dup()
     sqlt.distinct
     assert_equal('SELECT DISTINCT blah FROM target t', sqlt.to_sql())
+
+    sqlt = tmpl.dup()
+    sqlt.join('other o', 't.blah_id = o.blah_id', 't.blee_id = o.blee_id')
+    assert_equal('SELECT blah FROM target t JOIN other o ON t.blah_id = o.blah_id AND t.blee_id = o.blee_id', sqlt.to_sql())
 
     sqlt = tmpl.dup()
     sqlt.left_join('other o', 't.blah_id = o.blah_id')
@@ -53,35 +58,17 @@ class TestSelect < Minitest::Test
     sqlt = tmpl.dup()
     sqlt.having('blah > 0')
     assert_equal('SELECT blah FROM target t HAVING blah > 0', sqlt.to_sql())
+
+    sqlt = tmpl.dup()
+    sqlt.group_by('blah')
+    assert_equal('SELECT blah FROM target t GROUP BY blah', sqlt.to_sql())
+    sqlt.with_rollup
+    assert_equal('SELECT blah FROM target t GROUP BY blah WITH ROLLUP', sqlt.to_sql())
   end
 
   def test_tables
     assert_equal('SELECT t.blah FROM target t USE INDEX (blee)', SqlStmt.new.select().table('target t', 'blee').no_where.get('t.blah').to_sql())
-  end
 
-  def test_group_by
-    sqlt = SqlStmt.new.select().table('source').get('blah').no_where.group_by('blah')
-    assert_equal('SELECT blah FROM source GROUP BY blah', sqlt.to_s)
-    sqlt.with_rollup
-    assert_equal('SELECT blah FROM source GROUP BY blah WITH ROLLUP', sqlt.to_s)
-  end
-
-  def test_duplicate_joins
-    sqlt = SqlStmt.new.select().table('source s').get('frog').no_where
-    4.times { sqlt.join('other o', 's.blah_id = o.blah_id') }
-    assert_equal('SELECT frog FROM source s JOIN other o ON s.blah_id = o.blah_id', sqlt.to_s)
-    assert_equal('other o', sqlt.data.joins.first.table.str)
-  end
-
-  def test_join_with_multiple_conditions
-    %i(join left_join).each do |method|
-      sqlt = SqlStmt.new.select().table('source s').get('frog').no_where.send(method, 'other o', 'z.blee_id = o.blee_id', 'z.other_field = o.other_field')
-      method_sql = method.to_s.upcase.sub('_', ' ')
-      assert_equal("SELECT frog FROM source s #{method_sql} other o ON z.blee_id = o.blee_id AND z.other_field = o.other_field", sqlt.to_s)
-    end
-  end
-
-  def test_includes_table
     sqlt = SqlStmt.new.select().table('target')
     assert(sqlt.includes_table?('target'))
     assert_equal(['target'], sqlt.data.table_ids.to_a)
@@ -94,5 +81,12 @@ class TestSelect < Minitest::Test
     sqlt = SqlStmt.new.select().table('target AS t')
     assert(sqlt.includes_table?('target'))
     assert(sqlt.includes_table?('t'))
+  end
+
+  def test_duplicate_joins
+    sqlt = SqlStmt.new.select().table('source s').get('frog').no_where
+    4.times { sqlt.join('other o', 's.blah_id = o.blah_id') }
+    assert_equal('SELECT frog FROM source s JOIN other o ON s.blah_id = o.blah_id', sqlt.to_s)
+    assert_equal('other o', sqlt.data.joins.first.table.str)
   end
 end
