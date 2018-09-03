@@ -34,7 +34,7 @@ class TestSelect < Minitest::Test
     assert_equal('SELECT blah FROM target JOIN other o ON target.id = o.id WHERE frog = 1', sqlt.to_sql())
   end
 
-  def test_misc
+  def test_simple_with_small_variations
     tmpl = SqlStmt.new.select().table('target t').get('blah').no_where()
     assert_equal(['target', 't'], tmpl.data.table_ids.to_a())
 
