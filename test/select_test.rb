@@ -5,8 +5,9 @@ class TestSelect < Minitest::Test
   def test_gradually
     sqlt = SqlStmt.new
 
-    sqlt.select
-    sqlt.type('select')
+    # keep these chained together, so we have at least one test of the return value of all the method calls
+    # in ruby this isn't particular tricky or unique, but still it's good to test
+    sqlt.select.type('select')
     assert_raises(SqlStmtError) { sqlt.update() }
 
     sqlt.table('target')
