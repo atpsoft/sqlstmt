@@ -4,8 +4,10 @@ require 'date'
 class String
   unless method_defined?(:to_sql)
     def to_sql
-       str = gsub('\\', '\\\\').gsub('\'', '\\\'').gsub("'", "\\'")
-      "'#{str}'"
+      str = gsub('\\') {'\\\\'}
+      str = str.gsub("'") {"\\'"}
+      str = str.gsub('"') {'\\"'}
+      return "'#{str}'"
     end
   end
 end
