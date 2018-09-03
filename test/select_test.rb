@@ -67,20 +67,24 @@ class TestSelect < Minitest::Test
   end
 
   def test_tables
-    assert_equal('SELECT t.blah FROM target t USE INDEX (blee)', SqlStmt.new.select().table('target t', 'blee').no_where.get('t.blah').to_sql())
+    sqlt = SqlStmt.new.select().table('target t', 'blee').no_where.get('t.blah')
+    assert_equal('SELECT t.blah FROM target t USE INDEX (blee)', sqlt.to_sql())
 
     sqlt = SqlStmt.new.select().table('target')
     assert(sqlt.includes_table?('target'))
-    assert_equal(['target'], sqlt.data.table_ids.to_a)
+    assert(!sqlt.includes_table?('blah'))
 
     sqlt = SqlStmt.new.select().table('target t')
     assert(sqlt.includes_table?('target'))
     assert(sqlt.includes_table?('t'))
-    assert(!sqlt.includes_table?('blah'))
 
     sqlt = SqlStmt.new.select().table('target AS t')
     assert(sqlt.includes_table?('target'))
     assert(sqlt.includes_table?('t'))
+
+    sqlt.join('other o', 't.blah_id = o.blah_id')
+    assert(sqlt.includes_table?('other'))
+    assert(sqlt.includes_table?('o'))
   end
 
   def test_duplicate_joins
