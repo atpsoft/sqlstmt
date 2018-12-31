@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.summary = 'build SQL statements using method calls instead of strings'
   s.description = 'Build SQL statements using method calls instead of strings. This is not an ORM. It has only been used and tested with MySQL so far but the intention is to make it SQL agnostic.'
   s.required_ruby_version = '>= 2.2.0'
-  s.authors = ['Makani Mason', 'Kem Mason']
+  s.authors = ['ATPSoft']
   s.bindir = 'bin'
   s.homepage = 'https://github.com/atpsoft/sqlstmt'
   s.license = 'MIT'
