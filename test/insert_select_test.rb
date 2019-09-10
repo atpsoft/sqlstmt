@@ -16,6 +16,12 @@ class TestInsertSelect < Minitest::Test
     assert_equal('INSERT INTO target SELECT * FROM source', SqlStmt.new.insert.into('target').table('source').set(nil, '*').no_where.to_s)
   end
 
+  def test_ignore_duplicate
+    sqlt = SqlStmt.new.insert.into('target').table('source').set(nil, '*').no_where
+    assert_equal('INSERT INTO target SELECT * FROM source ON DUPLICATE KEY UPDATE idkey = idkey', sqlt.dup.ignore_duplicate('idkey').to_s)
+    assert_equal('INSERT INTO target SELECT * FROM source ON DUPLICATE KEY UPDATE idkey = idkey + 1', sqlt.dup.on_duplicate('idkey = idkey + 1').to_s)
+  end
+
   def test_dup
     shared_builder = SqlStmt.new.insert.into('target')
     first_builder = shared_builder

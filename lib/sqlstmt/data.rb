@@ -4,7 +4,7 @@ module SqlStmtLib
 extend self
 
 FLAG_KEYWORDS = %i(distinct ignore replace straight_join with_rollup).freeze
-SINGLE_VALUE_KEYWORDS = %i(group_by into limit offset order_by outfile).freeze
+SINGLE_VALUE_KEYWORDS = %i(group_by into limit offset order_by outfile on_duplicate ignore_duplicate).freeze
 MULTI_VALUE_KEYWORDS = %i(get having where).freeze
 
 # :str is the full original string specifying the table, like 'frog f' or 'frog AS f' or 'frog'

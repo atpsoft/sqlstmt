@@ -59,6 +59,11 @@ class MysqlBuilder
       parts << "(#{field_list})"
     end
     parts << shared_select(@data.set_values)
+    if @data.on_duplicate
+      parts << "ON DUPLICATE KEY UPDATE #{@data.on_duplicate}"
+    elsif @data.ignore_duplicate
+      parts << "ON DUPLICATE KEY UPDATE #{@data.ignore_duplicate} = #{@data.ignore_duplicate}"
+    end
     return combine_parts(parts)
   end
 
