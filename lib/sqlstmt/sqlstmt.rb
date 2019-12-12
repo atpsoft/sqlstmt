@@ -62,6 +62,7 @@ class SqlStmt
       @data.set_fields.clear
       @data.set_values.clear
     end
+    return self
   end
 
   ###### tables & joins
