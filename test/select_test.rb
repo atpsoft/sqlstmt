@@ -2,6 +2,16 @@ require_relative 'helper'
 
 # adding this extra line so lines can match up perfectly for now with the swift implementation
 class TestSelect < Minitest::Test
+  def test_update_becomes_select
+    sqlt = SqlStmt.new.update.table('target')
+    sqlt.set('blah', 'blee').no_where
+    assert_equal('UPDATE target SET blah = blee',sqlt.to_s)
+
+    sqlt.switch_to_select
+    sqlt.get('blah')
+    assert_equal('SELECT blah FROM target', sqlt.to_sql())
+  end
+
   def test_gradually
     sqlt = SqlStmt.new
 

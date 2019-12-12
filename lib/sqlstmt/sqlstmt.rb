@@ -54,6 +54,14 @@ class SqlStmt
     return self
   end
 
+  ###### switch statement type
+
+  def switch_to_select
+    @data.stmt_type = 'select'
+    @data.set_fields.clear
+    @data.set_values.clear
+  end
+
   ###### tables & joins
 
   def table(ref, use_index = nil)
