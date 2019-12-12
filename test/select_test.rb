@@ -7,7 +7,11 @@ class TestSelect < Minitest::Test
     sqlt.set('blah', 'blee').no_where
     assert_equal('UPDATE target SET blah = blee',sqlt.to_s)
 
-    sqlt.switch_to_select
+    sqlt.switch_type('insert', false)
+    sqlt.into('frog')
+    assert_equal('INSERT INTO frog (blah) SELECT blee FROM target', sqlt.to_sql())
+
+    sqlt.switch_type('select')
     sqlt.get('blah')
     assert_equal('SELECT blah FROM target', sqlt.to_sql())
   end

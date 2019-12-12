@@ -56,10 +56,12 @@ class SqlStmt
 
   ###### switch statement type
 
-  def switch_to_select
-    @data.stmt_type = 'select'
-    @data.set_fields.clear
-    @data.set_values.clear
+  def switch_type(new_type, clear_set_calls = true)
+    @data.stmt_type = new_type
+    if clear_set_calls
+      @data.set_fields.clear
+      @data.set_values.clear
+    end
   end
 
   ###### tables & joins
