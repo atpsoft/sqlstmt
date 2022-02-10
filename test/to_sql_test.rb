@@ -10,7 +10,7 @@ class Test_to_sql < Minitest::Test
     assert_equal("'b\\\"lah'", "b\"lah".to_sql())
 
     assert_equal('3', 3.to_sql)
-    assert_equal('10.0', BigDecimal.new('10').to_sql)
+    assert_equal('10.0', BigDecimal('10').to_sql)
 
     assert_equal('1', true.to_sql)
     assert_equal('0', false.to_sql)
